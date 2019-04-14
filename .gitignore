@@ -1,3 +1,17 @@
 TagHelpersDemo/bin/
 TagHelpersDemo/obj/
 TagHelpersDemo/.vs/
+IdentyServerSample/IdentityServerCenter/.vs/
+IdentyServerSample/mvcCookieAuthSample/MvcClient/obj/
+IdentyServerSample/mvcCookieAuthSample/mvcCookieAuthSample2/.vs/
+IdentyServerSample/mvcCookieAuthSample/mvcCookieAuthSample2/bin/
+IdentyServerSample/mvcCookieAuthSample/mvcCookieAuthSample2/obj/
+IdentyServerSample/IdentityServerCenter/ThirPartDemo/obj/
+IdentyServerSample/IdentityServerCenter/ThirPartDemo/bin/
+IdentyServerSample/IdentityServerCenter/PwdClient/obj/
+IdentyServerSample/IdentityServerCenter/IdentityServerCenter/obj/
+IdentyServerSample/IdentityServerCenter/ClientCreadentialApi/obj/
+IdentyServerSample/IdentityServerCenter/ClientCreadentialApi/bin/
+IdentyServerSample/IdentityServerCenter/PwdClient/bin/
+IdentyServerSample/mvcCookieAuthSample/MvcClient/bin/
+IdentyServerSample/IdentityServerCenter/IdentityServerCenter/bin/

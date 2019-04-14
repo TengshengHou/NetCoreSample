@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "f6bb8d49-6728-48b2-98b3-02507e3dac8b",
+		"name": "IdentityServer测试",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "获取Token_client_credentials :http://localhost:5000/connect/token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client_id",
+							"value": "client",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"connect",
+						"token"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "获取Token"
+			},
+			"response": []
+		},
+		{
+			"name": "获取Token _password:http://localhost:5000/connect/token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "pwdclient",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"connect",
+						"token"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "获取Token _password:http://localhost:5000/connect/token"
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5001/api/Values",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFkMmM2YWM5NGE1NzU1YjkyMzU0ZTFlZTE5OWRkYzM2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NTMzMTkwODgsImV4cCI6MTU1MzMyMjY4OCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9yZXNvdXJjZXMiLCJhcGkiXSwiY2xpZW50X2lkIjoicHdkY2xpZW50Iiwic3ViIjoiMSIsImF1dGhfdGltZSI6MTU1MzMxOTA4OCwiaWRwIjoibG9jYWwiLCJzY29wZSI6WyJhcGkiXSwiYW1yIjpbInB3ZCJdfQ.KgXKsiH7_lVodiQz_vEojkQ8hEC0zTFDEsYzfvi2Lf8PVFfhi7YyLYmGQipL34Ynsq1maQbCl4WWrTSzdWoPK9ascnEdJpLbHX5VroINrmcsE-VF1gXc_KwT_zQVTephn1OLOa71-YfcxRdp20Uc98maegGbeZPeJHYLQzVanHVum2P0bwSNU7mgDcWx-NZQRslyYZBnc1wDx3UAW1S5R2P3d1UFItLdrqQfTW5xVIsYe2ELwT5-qEpwwv7KOT3qBstZeifeGr40KLDcQggLD73NdA7VcuvTWzJM_bglPrs0dkdBUn5VL7QBFyH47PTs1EwpkfBzmsXJeSIsccPDjg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5001/api/Values",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Values"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
