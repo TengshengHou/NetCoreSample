@@ -15,3 +15,5 @@ IdentyServerSample/IdentityServerCenter/ClientCreadentialApi/bin/
 IdentyServerSample/IdentityServerCenter/PwdClient/bin/
 IdentyServerSample/mvcCookieAuthSample/MvcClient/bin/
 IdentyServerSample/IdentityServerCenter/IdentityServerCenter/bin/
+CoreService/User.Api/User.Api/obj/
+CoreService/User.Api/.vs/User.Api/v15/
