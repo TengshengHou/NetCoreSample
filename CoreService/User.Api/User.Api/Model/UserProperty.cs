@@ -7,7 +7,7 @@ namespace User.Api.Model
 {
     public class UserProperty
     {
-        public string UserId{get;set;}
+        public string AppUserId{get;set;}
 
         public string Key { get; set; }
 
