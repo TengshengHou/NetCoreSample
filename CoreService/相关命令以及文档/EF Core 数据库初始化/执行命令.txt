@@ -1,0 +1,4 @@
+docker pull mysql/mysql-server
+:需要先创建/docker/mysql/config/my.cnf文件和/docker/mysql/data文件夹
+
+docker run -d -p 3306:3306 --name mysql01 -v /d/docker/mysql/config/my.cnf:/etc/my.cnf -v /mysql-data:/var/lib/mysql mysql/mysql-server
