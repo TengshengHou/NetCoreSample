@@ -1,4 +1,21 @@
 docker pull mysql/mysql-server
 :需要先创建/docker/mysql/config/my.cnf文件和/docker/mysql/data文件夹
+docker exec -it mysql01 bash
 
 docker run -d -p 3306:3306 --name mysql01 -v /d/docker/mysql/config/my.cnf:/etc/my.cnf -v /mysql-data:/var/lib/mysql mysql/mysql-server
+
+
+flush privileges;
+set password for '用户名'@'localhost' ='密码';
+
+
+mysql -uroot -p
+
+
+
+GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+select host,user from mysql.user;
+ update mysql.user set host = '%'  where user = 'root'
+  update mysql.user set host = 'localhost'  where user = 'root'
+  
