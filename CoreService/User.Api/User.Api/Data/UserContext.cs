@@ -11,6 +11,10 @@ namespace User.Api.Data
 
     public class UserContext : DbContext
     {
+
+
+        public DbSet<AppUser> Users {get;set;}
+
         public UserContext(DbContextOptions<UserContext> options) : base(options)
         {
         }

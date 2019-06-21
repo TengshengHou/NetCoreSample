@@ -13,6 +13,15 @@ namespace Core.SimpleTemp.Mvc
         private static void Initialize(UserContext context)
         {
             context.Database.EnsureCreated();
+            //检查是否需要初始化数据
+            if (context.Users.Any())
+            {
+                return;
+            }
+            context.Users.Add(new User.Api.Model.AppUser()
+            {
+                Name = "admin",
+            });
         }
 
 
@@ -25,7 +34,7 @@ namespace Core.SimpleTemp.Mvc
                 try
                 {
                     var context = services.GetRequiredService<UserContext>();
-                    DBInitializer.Initialize(context);
+                    Initialize(context);
                 }
                 catch (Exception ex)
                 {
