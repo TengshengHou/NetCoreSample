@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using User.Api.Data;
 namespace User.Api.Controllers
 {
-    [Route("api/[Users]")]
+    [Route("api/Users")]
     [ApiController]
     public class UserController : BaseController
     {
@@ -17,7 +17,8 @@ namespace User.Api.Controllers
             _userContext = userContext;
         }
 
-
+        [Route("Get")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var user =await _userContext.Users.AsNoTracking().Include(u => u.Properties).SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);

@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "bb25b5a0-9d6a-4f16-b2a7-b3fdeea8d676",
+		"name": "UserApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:5000/api/users/Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/users/Get",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"Get"
+					]
+				},
+				"description": "http://127.0.0.1:5000/api/users/Get"
+			},
+			"response": []
+		}
+	]
+}

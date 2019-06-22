@@ -22,6 +22,7 @@ namespace Core.SimpleTemp.Mvc
             {
                 Name = "admin",
             });
+            context.SaveChanges();
         }
 
 
