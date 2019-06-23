@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using User.Api.Data;
+using User.Api.Filters;
 
 namespace User.Api
 {
@@ -31,7 +32,11 @@ namespace User.Api
                 //options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseSqlServer(Configuration.GetConnectionString("sqlservice"), sqlOptions => sqlOptions.UseRowNumberForPaging());
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options =>
+            {
+                //自定义全局异常过滤器
+                options.Filters.Add<HttpGlobalExceptionFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -23,7 +23,8 @@ namespace User.Api.Controllers
         {
             var user =await _userContext.Users.AsNoTracking().Include(u => u.Properties).SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
             if (user == null)
-                return NotFound();
+                //return NotFound();
+                throw new UserOperationException("错误的用户上下文ID");
             return Json(user) ;
 
         }
