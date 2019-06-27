@@ -21,6 +21,7 @@ namespace Core.SimpleTemp.Mvc
                     Name = "admin",
                 });
             }
+            context.SaveChanges();
             if (!context.UserProperty.Any())
             {
                 var adminId = context.Users.SingleOrDefault(u => u.Name == "admin").Id;

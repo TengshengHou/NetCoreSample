@@ -41,7 +41,7 @@ namespace User.Api.Controllers
                         "value":"adminA"
                     } 
           */
-            var user = await _userContext.Users.Include(u=>u.Properties).SingleOrDefaultAsync(u=>u.Id==UserIdentity.UserId); 
+            var user = await _userContext.Users.SingleOrDefaultAsync(u=>u.Id==UserIdentity.UserId); 
             patch.ApplyTo(user);
 
 
@@ -51,7 +51,9 @@ namespace User.Api.Controllers
             }
 
             var originProperties = await _userContext.UserProperty.AsNoTracking().Where(u => u.AppUserId == UserIdentity.UserId).ToListAsync();
+            //合并，去重
             var allProperties = originProperties.Union(user.Properties).Distinct();
+            //这里的意思是strList1中哪些是strList2中没有的,并将获得的差值存放在strList3(即: strList1中有, strList2中没有)
             var removedProperties = originProperties.Except(user.Properties);
             var newProperties = allProperties.Except(originProperties);
 

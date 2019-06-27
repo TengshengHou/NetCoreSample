@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "4e609369-138e-4df0-91cb-830e6f02f69b",
+		"name": "UserApi copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:5000/api/users/Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/users/Get",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"Get"
+					]
+				},
+				"description": "http://127.0.0.1:5000/api/users/Get"
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/api/users",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\n\t\"op\": \"replace\",\n\t\"path\":\"/properties\",\n\t\"value\":[{\n\t\t\"key\": \"fin_stage\",\n\t\t\"value\": \"a+轮\",\n\t\t\"text\": \"a+轮\"\n\n\t}, {\n\t\t\"key\": \"fin_stage\",\n\t\t\"value\": \"b+轮\",\n\t\t\"text\": \"b+轮\"\n\n\t}]\n}\n\t]"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
