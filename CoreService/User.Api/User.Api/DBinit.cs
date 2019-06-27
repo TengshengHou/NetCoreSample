@@ -14,14 +14,30 @@ namespace Core.SimpleTemp.Mvc
         {
             context.Database.EnsureCreated();
             //检查是否需要初始化数据
-            if (context.Users.Any())
+            if (!context.Users.Any())
             {
-                return;
+                context.Users.Add(new User.Api.Model.AppUser()
+                {
+                    Name = "admin",
+                });
             }
-            context.Users.Add(new User.Api.Model.AppUser()
+            if (!context.UserProperty.Any())
             {
-                Name = "admin",
-            });
+                var adminId = context.Users.SingleOrDefault(u => u.Name == "admin").Id;
+                context.UserProperty.Add(new User.Api.Model.UserProperty()
+                {
+                    AppUserId = adminId,
+                    Key = "key1",
+                    Value = "Value1"
+                });
+                context.UserProperty.Add(new User.Api.Model.UserProperty()
+                {
+                    AppUserId = adminId,
+                    Key = "key2",
+                    Value = "Value2"
+                });
+            }
+
             context.SaveChanges();
         }
 

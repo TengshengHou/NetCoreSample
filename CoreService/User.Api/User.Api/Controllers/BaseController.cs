@@ -11,7 +11,7 @@ namespace User.Api.Controllers
     [ApiController]
     public class BaseController : Controller
     {
-        protected UserIdentity UserIdentity => new UserIdentity() { UserId = 1, Name = "2222" };
+        protected UserIdentity UserIdentity => new UserIdentity() { UserId = 1, Name = "admin" };
 
 
     }
