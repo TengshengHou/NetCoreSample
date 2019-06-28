@@ -19,3 +19,5 @@ CoreService/User.Api/User.Api/obj/
 CoreService/User.Api/.vs/User.Api/v15/
 CoreService/User.Api/User.Api/bin/
 CoreService/User.Api/.vs/User.Api/DesignTimeBuild/
+CoreService/User.Api/User.API.UnitTests/bin/
+CoreService/User.Api/User.API.UnitTests/obj/

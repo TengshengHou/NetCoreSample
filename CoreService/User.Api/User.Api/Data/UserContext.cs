@@ -11,7 +11,7 @@ namespace User.Api.Data
 
     public class UserContext : DbContext
     {
-
+        private DbContextOptionsBuilder<UserContext> options;
 
         public DbSet<AppUser> Users {get;set;}
         public DbSet<UserProperty> UserProperty { get; set; }
@@ -19,6 +19,8 @@ namespace User.Api.Data
         public UserContext(DbContextOptions<UserContext> options) : base(options)
         {
         }
+
+     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

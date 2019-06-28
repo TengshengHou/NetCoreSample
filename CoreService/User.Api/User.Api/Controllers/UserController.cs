@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using User.Api.Data;
 namespace User.Api.Controllers
 {
@@ -13,7 +14,7 @@ namespace User.Api.Controllers
     public class UserController : BaseController
     {
         UserContext _userContext;
-        public UserController(UserContext userContext) 
+        public UserController(UserContext userContext, ILogger<UserController> logger ) 
         {
             _userContext = userContext;
         }
