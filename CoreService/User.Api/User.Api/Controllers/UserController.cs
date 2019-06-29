@@ -45,7 +45,7 @@ namespace User.Api.Controllers
             var user = await _userContext.Users.SingleOrDefaultAsync(u=>u.Id==UserIdentity.UserId); 
             patch.ApplyTo(user);
 
-
+            
             foreach (var property in user.Properties)
             {
                 _userContext.Entry(property).State=EntityState.Detached;
