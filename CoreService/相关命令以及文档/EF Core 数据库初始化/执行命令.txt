@@ -13,15 +13,16 @@ mysql -uroot -p
 
 
 
-
+set password for 'root'@'localhost' ='123456';
 mysql> alter  user 'root'@'localhost' identified by '123456';  
+
 Query OK, 0 rows affected (0.21 sec)  
   
 mysql> flush privileges;  
 Query OK, 0 rows affected (0.04 sec)  
   
 --远程客户端连接  
-mysql> update user set Host='%' where User='root';  
+mysql> update mysql.user set Host='%' where User='root';  
 Query OK, 1 row affected (0.16 sec)  
   
 mysql> flush privileges;  
