@@ -47,5 +47,5 @@ namespace User.Api
             }
             app.UseMvc();
         }
-    }
+    } 
 }
