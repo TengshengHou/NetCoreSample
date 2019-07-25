@@ -14,7 +14,7 @@ namespace User.Api.Controllers
     public class UserController : BaseController
     {
         UserContext _userContext;
-        public UserController(UserContext userContext, ILogger<UserController> logger ) 
+        public UserController(UserContext userContext, ILogger<UserController> logger)
         {
             _userContext = userContext;
         }
@@ -23,32 +23,32 @@ namespace User.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var user =await _userContext.Users.AsNoTracking().Include(u => u.Properties).SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+            var user = await _userContext.Users.AsNoTracking().Include(u => u.Properties).SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
             if (user == null)
                 //return NotFound();
                 throw new UserOperationException("错误的用户上下文ID");
-            return Json(user) ;
+            return Json(user);
 
         }
         [Route("")]
         [HttpPatch]
-     
-    public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<Model.AppUser> patch)
+
+        public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<Model.AppUser> patch)
         {
-         /*
-                    {
-                        "op":"replace",
-                        "path":"/Company",
-                        "value":"adminA"
-                    } 
-          */
-            var user = await _userContext.Users.SingleOrDefaultAsync(u=>u.Id==UserIdentity.UserId); 
+            /*
+                       {
+                           "op":"replace",
+                           "path":"/Company",
+                           "value":"adminA"
+                       } 
+             */
+            var user = await _userContext.Users.SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
             patch.ApplyTo(user);
 
-            
+
             foreach (var property in user.Properties)
             {
-                _userContext.Entry(property).State=EntityState.Detached;
+                _userContext.Entry(property).State = EntityState.Detached;
             }
 
             var originProperties = await _userContext.UserProperty.AsNoTracking().Where(u => u.AppUserId == UserIdentity.UserId).ToListAsync();
@@ -69,6 +69,22 @@ namespace User.Api.Controllers
 
             await _userContext.SaveChangesAsync();
             return Json(user);
+        }
+
+
+
+        [Route("check-orcreate")]
+        [HttpPost]
+        public async Task<IActionResult> CheckOrCreate(string phone)
+        {
+            if (!await _userContext.Users.AsNoTracking().Include(u => u.Properties).AnyAsync(u => u.Phone == phone))
+            {
+                _userContext.Users.Add(new Model.AppUser
+                {
+                    Phone = phone
+                });
+            }
+            return Ok();
         }
     }
 }
