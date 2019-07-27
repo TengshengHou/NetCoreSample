@@ -1,8 +1,12 @@
+
+docker run -d -p 3306:3306 -e MYSQL_USER="test" -e MYSQL_PASSWORD="password" -e MYSQL_ROOT_PASSWORD="password" --name mysql  mysql/mysql-server  --character-set-server=utf8 --collation-server=utf8_general_ci
+
 docker pull mysql/mysql-server
 :需要先创建/docker/mysql/config/my.cnf文件和/docker/mysql/data文件夹
 docker exec -it mysql01 bash
 
 docker run -d -p 3306:3306 --name mysql01 -v /d/docker/mysql/config/my.cnf:/etc/my.cnf -v /mysql-data:/var/lib/mysql mysql/mysql-server
+docker run -d -p 3306:3306 --name mysql01 -v /srv/mysql/config/my.cnf:/etc/my.cnf -v /srv/mysql/mysql-server:/var/lib/mysql mysql/mysql-server
 
 
 flush privileges;
@@ -29,7 +33,7 @@ mysql> flush privileges;
 Query OK, 0 rows affected (0.04 sec)  
   
 --客户端远程连接时报：Plugin caching_sha2_password could not be loaded，客户端不支持该加密方式  
-mysql> select user, host, plugin, authentication_string from user;  
+mysql> select user, host, plugin, authentication_string from mysql.user;  
 +------------------+-----------+-----------------------+------------------------------------------------------------------------+  
 | user             | host      | plugin                | authentication_string                                                  |  
 +------------------+-----------+-----------------------+------------------------------------------------------------------------+  

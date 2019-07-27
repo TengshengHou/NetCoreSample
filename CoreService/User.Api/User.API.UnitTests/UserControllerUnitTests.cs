@@ -2,9 +2,11 @@ using FluentAssertions;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using User.Api.Controllers;
 using User.Api.Data;
@@ -36,13 +38,13 @@ namespace User.API.UnitTests
             return userContext;
         }
 
-        private UserController GetUserController()
+        private (UserController controller, UserContext userContext) GetUserController()
         {
             var context = GetUserContext();
             var loggerMoq = new Mock<ILogger<UserController>>();
             var logger = loggerMoq.Object;
             var contorller = new UserController(context, logger);
-            return contorller;
+            return (controller: contorller, userContext: context);
         }
 
 
@@ -50,7 +52,7 @@ namespace User.API.UnitTests
         [Fact]
         public async Task Get_RetrunRigthUser_WithExpectedParameters()
         {
-            var contorller = GetUserController();
+            (var contorller, var userContext) = GetUserController();
             var response = await contorller.Get();
             //Assert.IsType<JsonResult>(response);
             var result = response.Should().BeOfType<JsonResult>().Subject;
@@ -63,13 +65,78 @@ namespace User.API.UnitTests
         [Fact]
         public async Task Path_RetrunNewName_WithExpectedNewnameParameter()
         {
-            var contorller = GetUserController();
+            (var contorller, var userContext) = GetUserController();
             var document = new JsonPatchDocument<AppUser>();
             document.Replace(u => u.Name, "aa");
             var response = await contorller.Patch(document);
             var result = response.Should().BeOfType<JsonResult>().Subject;
+
+
             var appUser = result.Value.Should().BeAssignableTo<AppUser>().Subject;
             appUser.Name.Should().Be("aa");
+
+
+            var userModel = await userContext.Users.SingleOrDefaultAsync(u => u.Id == 1);
+            userModel.Should().NotBeNull();
+            userModel.Name.Should().Be("aa");
+        }
+
+
+        [Fact]
+        public async Task Path_RetrunNewName_WithAddProperty()
+        {
+            (var contorller, var userContext) = GetUserController();
+            var document = new JsonPatchDocument<AppUser>();
+            document.Replace(u => u.Properties, new List<UserProperty>() {
+                new UserProperty(){
+                     Key="fin_industry",
+                      Text="»¥ÁªÍø",
+                       Value="»¥ÁªÍø"
+                }
+            });
+
+
+            var response = await contorller.Patch(document);
+            var result = response.Should().BeOfType<JsonResult>().Subject;
+
+
+            var appUser = result.Value.Should().BeAssignableTo<AppUser>().Subject;
+            appUser.Properties.Count.Should().Be(1);
+            appUser.Properties.First().Value.Should().Be("»¥ÁªÍø");
+            appUser.Properties.First().Key.Should().Be("fin_industry");
+
+
+
+            var userModel = await userContext.Users.SingleOrDefaultAsync(u => u.Id == 1);
+            userModel.Properties.Count.Should().Be(1);
+            userModel.Properties.First().Value.Should().Be("»¥ÁªÍø");
+            userModel.Properties.First().Key.Should().Be("fin_industry");
+        }
+
+
+        [Fact]
+        public async Task Path_RetrunNewName_WithRemoveProperty()
+        {
+            (var contorller, var userContext) = GetUserController();
+            var document = new JsonPatchDocument<AppUser>();
+            document.Replace(u => u.Properties, new List<UserProperty>() {
+               
+            });
+
+
+            var response = await contorller.Patch(document);
+            var result = response.Should().BeOfType<JsonResult>().Subject;
+
+
+            var appUser = result.Value.Should().BeAssignableTo<AppUser>().Subject;
+            appUser.Properties.Should().BeEmpty();
+            
+
+
+
+            var userModel = await userContext.Users.SingleOrDefaultAsync(u => u.Id == 1);
+            userModel.Properties.Should().BeEmpty();
+            
         }
     }
 }

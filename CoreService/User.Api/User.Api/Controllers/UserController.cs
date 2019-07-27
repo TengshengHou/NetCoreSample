@@ -46,7 +46,7 @@ namespace User.Api.Controllers
             patch.ApplyTo(user);
 
             
-            foreach (var property in user.Properties)
+            foreach (var property in user?.Properties)
             {
                 _userContext.Entry(property).State=EntityState.Detached;
             }
