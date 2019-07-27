@@ -70,5 +70,21 @@ namespace User.Api.Controllers
             await _userContext.SaveChangesAsync();
             return Json(user);
         }
+
+
+
+        [Route("check-orcreate")]
+        [HttpPost]
+        public async Task<IActionResult> CheckOrCreate(string phone)
+        {
+            if (!await _userContext.Users.AsNoTracking().Include(u => u.Properties).AnyAsync(u => u.Phone == phone))
+            {
+                _userContext.Users.Add(new Model.AppUser
+                {
+                    Phone = phone
+                });
+            }
+            return Ok();
+        }
     }
 }
