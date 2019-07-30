@@ -38,7 +38,7 @@ namespace User.Identity.Authentication
                 return;
             }
             //完成用户注册
-            var userID = _userService.CheckOrCreate(phone);
+            var userID = _userService.CheckOrCreateAsync(phone);
             if (userID <= 0)
             {
                 context.Result = errorValidationResult;
