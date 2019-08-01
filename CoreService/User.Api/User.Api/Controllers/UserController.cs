@@ -83,6 +83,7 @@ namespace User.Api.Controllers
             {
                 user = new Model.AppUser() { Phone = phone };
                 _userContext.Users.Add(user);
+                await _userContext.SaveChangesAsync();
             }
             return Ok(user.Id);
         }

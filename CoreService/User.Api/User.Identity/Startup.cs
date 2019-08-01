@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using User.Identity.Authentication;
+using User.Identity.Services;
 
 namespace User.Identity
 {
@@ -24,6 +27,17 @@ namespace User.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddIdentityServer()
+                .AddExtensionGrantValidator<SmsAuthCodeValidator>()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryClients(Config.GetClient())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryApiResources(Config.GetResources());
+
+            services.AddSingleton(new HttpClient());
+            services.AddScoped<IAuthCodeService, TestAuthCodeService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -34,7 +48,7 @@ namespace User.Identity
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseIdentityServer();
             app.UseMvc();
         }
     }
