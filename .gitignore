@@ -24,3 +24,5 @@ CoreService/User.Api/User.API.UnitTests/obj/
 CoreService/User.Api/User.Identity/obj/
 EmitDemo/.vs/
 CoreService/User.Api/User.Identity/bin/
+CoreService/User.Api/API.Gateway/bin/
+CoreService/User.Api/API.Gateway/obj/
