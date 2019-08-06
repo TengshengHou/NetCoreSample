@@ -27,3 +27,4 @@ CoreService/User.Api/User.Identity/bin/
 CoreService/User.Api/API.Gateway/bin/
 CoreService/User.Api/API.Gateway/obj/
 EmitDemo/
+CoreService/User.Api/.vs/

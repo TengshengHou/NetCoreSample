@@ -175,6 +175,142 @@
 					"body": null
 				}
 			]
+		},
+		{
+			"name": "获取Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "sms_auth_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "Android",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "scopes",
+							"value": "openid user_api offline_access",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "13232540167",
+							"type": "text"
+						},
+						{
+							"key": "auth_code",
+							"value": "111111",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/connect/token",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "http://{{host}}/connect/token",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "sms_auth_code",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "android",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "secret",
+									"type": "text"
+								},
+								{
+									"key": "scopes",
+									"value": "openid user_api offline_access",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "13232540167",
+									"type": "text"
+								},
+								{
+									"key": "auth_code",
+									"value": "111111",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}/connect/token",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "获取用户数据",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{host}}/users",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
