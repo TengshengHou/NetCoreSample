@@ -28,3 +28,10 @@ CoreService/User.Api/API.Gateway/bin/
 CoreService/User.Api/API.Gateway/obj/
 EmitDemo/
 CoreService/User.Api/.vs/
+CoreService/API/.vs/
+CoreService/API/API.Gateway/bin/
+CoreService/API/API.Gateway/obj/
+CoreService/API/API/obj/
+CoreService/API/API2/bin/
+CoreService/API/API2/obj/
+CoreService/API/API/bin/
