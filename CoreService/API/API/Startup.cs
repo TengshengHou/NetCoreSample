@@ -42,6 +42,8 @@ namespace API
 
 
         private void OnStopped() {
+            var client = new ConsulClient();
+            client.Agent.ServiceDeregister("SERVICENAME:5001");
         }
         private void OnStart()
         {

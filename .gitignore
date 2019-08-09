@@ -35,3 +35,6 @@ CoreService/API/API/obj/
 CoreService/API/API2/bin/
 CoreService/API/API2/obj/
 CoreService/API/API/bin/
+CoreService/API/Client/obj/
+CoreService/API/Client/bin/
+CoreService/API/consul/consul.exe
