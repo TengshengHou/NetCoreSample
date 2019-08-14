@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using User.Identity.Authentication;
+using User.Identity.Dto;
 using User.Identity.Services;
 
 namespace User.Identity
@@ -34,7 +36,12 @@ namespace User.Identity
                 .AddInMemoryClients(Config.GetClient())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetResources());
-
+            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+            services.AddSingleton<IDnsQuery>(p =>
+             {
+                 var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
+                 return new LookupClient(serviceConfiguration.Consul.DnsEndpoint.ToIPEndPoint());
+             });
             services.AddSingleton(new HttpClient());
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
             services.AddScoped<IUserService, UserService>();
