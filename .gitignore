@@ -38,3 +38,5 @@ CoreService/API/API/bin/
 CoreService/API/Client/obj/
 CoreService/API/Client/bin/
 CoreService/API/consul/consul.exe
+CoreService/User.Api/Reslience/bin/
+CoreService/User.Api/Reslience/obj/
