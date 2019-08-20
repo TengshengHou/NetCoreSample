@@ -11,8 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Reslience;
 using User.Identity.Authentication;
 using User.Identity.Dto;
+using User.Identity.infrastructure;
 using User.Identity.Services;
 
 namespace User.Identity
@@ -42,7 +44,18 @@ namespace User.Identity
                  var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
                  return new LookupClient(serviceConfiguration.Consul.DnsEndpoint.ToIPEndPoint());
              });
-            services.AddSingleton(new HttpClient());
+            //services.AddSingleton(new HttpClient());
+            services.AddSingleton(typeof(ResilienceClientFactory), sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<ResilienceClientFactory>>();
+
+                return new ResilienceClientFactory();
+            });
+            services.AddSingleton<IHttpClient>(sp =>
+            {
+                return sp.GetRequiredService<ResilienceClientFactory>().GetResilienceHttpClient();
+
+            });
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
             services.AddScoped<IUserService, UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

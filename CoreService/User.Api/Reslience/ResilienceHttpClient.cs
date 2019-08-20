@@ -22,7 +22,7 @@ namespace Reslience
         private readonly ConcurrentDictionary<string, PolicyWrap> _policyWrappers;
         private ILogger _logger;
         private IHttpContextAccessor _httpContextAccessor;
-        public ResilienceHttpClient(Func<string, IEnumerable<Policy>> policyCreator, ILogger<ResilienceHttpClient> logger, IHttpContextAccessor httpContextAccessor)
+        public ResilienceHttpClient(Func<string, IEnumerable<Policy>> policyCreator, ILogger logger, IHttpContextAccessor httpContextAccessor)
         {
             _policyCreator = policyCreator;
             _httpClient = new HttpClient();
