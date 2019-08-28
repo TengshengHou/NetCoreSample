@@ -87,5 +87,35 @@ namespace User.Api.Controllers
             }
             return Ok(user.Id);
         }
+
+        [HttpGet]
+        [Route("tags")]
+        public async Task<IActionResult> GetUserTags()
+        {
+            var ret = await _userContext.UserTags.Where(u => u.UserId == UserIdentity.UserId).ToListAsync();
+            return Ok(ret);
+        }
+        [HttpPost]
+        [Route("Search")]
+        public async Task<IActionResult> Search(string phone)
+        {
+            var ret = await _userContext.Users.Include(u => u.Properties).SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+            return Ok(ret);
+        }
+
+        [HttpPut]
+        [Route("tags")]
+        public async Task<IActionResult> UpdateUsetTas([FromBodyAttribute]List<string> tags)
+        {
+            var originTags = await _userContext.UserTags.Where(u => u.UserId == UserIdentity.UserId).ToListAsync();
+            var newTags = tags.Except(originTags.Select(a => a.Tag));
+            await _userContext.UserTags.AddRangeAsync(newTags.Select(a => new Model.UserTag() {
+                CreatedTime=DateTime.Now,
+                UserId=UserIdentity.UserId,
+                Tag=a
+            }));
+            await _userContext.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

@@ -24,20 +24,29 @@ namespace Reslience
         private IHttpContextAccessor _httpContextAccessor;
         public ResilienceHttpClient(Func<string, IEnumerable<Policy>> policyCreator, ILogger logger, IHttpContextAccessor httpContextAccessor)
         {
-            _policyCreator = policyCreator;
             _httpClient = new HttpClient();
             _policyWrappers = new ConcurrentDictionary<string, PolicyWrap>();
             _logger = logger;
+            _policyCreator = policyCreator;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<HttpResponseMessage> PostAsync<T>(string url, T item, string authorizationToken, string requestId = null, string authorizationMethod = "Bearer")
+        public async Task<HttpResponseMessage> PostAsync<T>(string url, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
-            return DoPostAsync<T>(HttpMethod.Post, url, item, authorizationToken, requestId, authorizationMethod);
+            Func<HttpRequestMessage> func = () => CreateHttpRequestMessage<T>(HttpMethod.Post, url, item);
+            return await DoPostPutAsync(HttpMethod.Post, url, func, authorizationToken, requestId, authorizationMethod);
+        }
+
+        public async Task<HttpResponseMessage> PostAsync(string url, Dictionary<string, string> form,
+string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
+        {
+
+            Func<HttpRequestMessage> func = () => CreateHttpRequestMessage(HttpMethod.Post, url, form);
+            return await DoPostPutAsync(HttpMethod.Post, url, func, authorizationToken, requestId, authorizationMethod);
         }
 
 
-        private async Task<HttpResponseMessage> DoPostAsync<T>(HttpMethod method, string url, T item, string authorizationToken, string requestId = null, string authorizationMethod = "Bearer")
+        private async Task<HttpResponseMessage> DoPostPutAsync(HttpMethod method, string url, Func<HttpRequestMessage> requestMessageAction, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
             if (method != HttpMethod.Post && method != HttpMethod.Put)
             {
@@ -46,9 +55,9 @@ namespace Reslience
             var origin = GetOriginFromUrl(url);
             return await HttpInvoker(origin, async () =>
             {
-                var requestMessage = new HttpRequestMessage(method, url);
+
+                HttpRequestMessage requestMessage = requestMessageAction();
                 SetAuthorizationHeader(requestMessage);
-                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
                 if (authorizationToken != null)
                     requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authorizationMethod, authorizationToken);
                 if (requestId != null)
@@ -93,6 +102,19 @@ namespace Reslience
                 requestMessage.Headers.Add("Authorization", new List<string> { authorizationHeader });
             }
 
+        }
+
+        private HttpRequestMessage CreateHttpRequestMessage<T>(HttpMethod method, string url, T item)
+        {
+            var requestMessage = new HttpRequestMessage(method, url);
+            requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
+            return requestMessage;
+        }
+        private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string url, Dictionary<string, string> form)
+        {
+            var requestMessage = new HttpRequestMessage(method, url);
+            requestMessage.Content = new FormUrlEncodedContent(form);
+            return requestMessage;
         }
     }
 }

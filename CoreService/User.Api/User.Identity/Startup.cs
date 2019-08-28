@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,12 +45,14 @@ namespace User.Identity
                  var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
                  return new LookupClient(serviceConfiguration.Consul.DnsEndpoint.ToIPEndPoint());
              });
-            //services.AddSingleton(new HttpClient());
+            //注册全局单例ResilienceClientFactory
             services.AddSingleton(typeof(ResilienceClientFactory), sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<ResilienceClientFactory>>();
-
-                return new ResilienceClientFactory();
+                var httpContextAccessor= sp.GetRequiredService<IHttpContextAccessor>();
+                var retryCount = 5;
+                var execptionCountAllowedBeforeBreaking = 5;
+                return new ResilienceClientFactory(logger,httpContextAccessor,retryCount,execptionCountAllowedBeforeBreaking); 
             });
             services.AddSingleton<IHttpClient>(sp =>
             {

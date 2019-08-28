@@ -8,7 +8,7 @@ namespace User.Api.Model
     public class UserTag
     {
         public int UserId { get; set; }
-        public int Tag { get; set; }
+        public string Tag { get; set; }
         public DateTime CreatedTime { get; set; }
     }
 }

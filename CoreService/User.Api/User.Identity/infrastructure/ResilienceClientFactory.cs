@@ -1,13 +1,9 @@
-﻿using Microsoft.ApplicationInsights.AspNetCore.Extensions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Reslience;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace User.Identity.infrastructure
 {
@@ -39,7 +35,7 @@ namespace User.Identity.infrastructure
         private Policy[] CreatePolicys(string origin)
         {
             return new Policy[] {
-                Policy.Handle<HttpRequestException>().WaitAndRetry(_retryCount,retryAttemp=>TimeSpan.FromSeconds(Math.Pow(2,retryAttemp)),
+                Policy.Handle<HttpRequestException>().WaitAndRetryAsync(_retryCount,retryAttemp=>TimeSpan.FromSeconds(Math.Pow(2,retryAttemp)),
                 (exception,stimeSpan,retryCount,context)=>{
                     var msg=$"第{retryCount}次重试"+
                     $"of {context.PolicyKey}"+
@@ -48,7 +44,7 @@ namespace User.Identity.infrastructure
                     _logger.LogWarning(msg);
                     _logger.LogDebug(msg);
                 }),
-                Policy.Handle<HttpRequestException>().CircuitBreaker(_execptionCountAllowedBeforeBreaking, TimeSpan.FromMinutes(1), (excpetion, dutation) =>
+                Policy.Handle<HttpRequestException>().CircuitBreakerAsync(_execptionCountAllowedBeforeBreaking, TimeSpan.FromMinutes(1), (excpetion, dutation) =>
                 {
                     _logger.LogWarning("熔断器打开");
                 }, () =>
