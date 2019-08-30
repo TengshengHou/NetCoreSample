@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{EE78FEBA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{827D17BF-1907-4F9F-A459-8383CE3C1900}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reslience", "Reslience\Reslience.csproj", "{557D8441-0C02-40D2-9B07-4F48262DAECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reslience", "Reslience\Reslience.csproj", "{557D8441-0C02-40D2-9B07-4F48262DAECA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.API", "Contact.API\Contact.API.csproj", "{1C0098F5-3CD8-4F75-9958-26E031D480CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{557D8441-0C02-40D2-9B07-4F48262DAECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{557D8441-0C02-40D2-9B07-4F48262DAECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{557D8441-0C02-40D2-9B07-4F48262DAECA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0098F5-3CD8-4F75-9958-26E031D480CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0098F5-3CD8-4F75-9958-26E031D480CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0098F5-3CD8-4F75-9958-26E031D480CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0098F5-3CD8-4F75-9958-26E031D480CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

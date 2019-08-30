@@ -40,3 +40,4 @@ CoreService/API/Client/bin/
 CoreService/API/consul/consul.exe
 CoreService/User.Api/Reslience/bin/
 CoreService/User.Api/Reslience/obj/
+CoreService/User.Api/Contact.API/obj/

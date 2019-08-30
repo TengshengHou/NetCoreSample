@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace User.Api.Dtos
+namespace Contact.API.Models
 {
-    public class UserIdentity
+    public class Contact
     {
-
         public int UserId { get; set; }
         public string Name { get; set; }
         //公司
@@ -19,7 +18,7 @@ namespace User.Api.Dtos
         //头像地址
         public string Avatar { get; set; }
 
-      
+   
 
     }
 }

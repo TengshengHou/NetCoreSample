@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace User.Api.Dtos
+namespace Contact.API.Models
 {
-    public class UserIdentity
+    public class ContactApplyRequest
     {
 
         public int UserId { get; set; }
@@ -19,7 +19,11 @@ namespace User.Api.Dtos
         //头像地址
         public string Avatar { get; set; }
 
-      
+        public string ApplierID { get; set; }
 
+        public string Approvaled { get; set; }
+
+
+        public DateTime HandleTime { get; set; }
     }
 }
