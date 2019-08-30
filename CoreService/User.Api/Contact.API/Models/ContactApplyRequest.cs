@@ -7,7 +7,7 @@ namespace Contact.API.Models
 {
     public class ContactApplyRequest
     {
-
+        public int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
         //公司
