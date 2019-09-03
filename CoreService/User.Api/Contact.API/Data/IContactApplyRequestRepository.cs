@@ -13,18 +13,18 @@ namespace Contact.API.Data
         /// </summary>
         /// <param name="contactApplyRequest"></param>
         /// <returns></returns>
-        bool AddRequest(ContactApplyRequest contactApplyRequest);
+        Task<bool> AddRequestAsync(ContactApplyRequest contactApplyRequest);
         /// <summary>
         /// 通过好友请求
         /// </summary>
         /// <param name="applierId"></param>
         /// <returns></returns>
-        bool Approval(int applierId);
+        Task<bool> ApprovalAsync(int applierId);
         /// <summary>
         /// 好友申请列表
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        bool GetRequestList(int userId);
+        Task<bool>  GetRequestListAsync(int userId);
     }
 }

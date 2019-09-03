@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Contact.API.Models
+namespace Contact.API.Dtos
 {
-    public class ContactApplyRequest
+    public class BaseUserInfo
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
         //公司
@@ -19,13 +18,5 @@ namespace Contact.API.Models
         //头像地址
         public string Avatar { get; set; }
 
-        public int ApplierID { get; set; }
-
-        public int Approvaled { get; set; }
-
-
-        public DateTime HandleTime { get; set; }
-
-        public DateTime CreateTime { get; set; }
     }
 }
