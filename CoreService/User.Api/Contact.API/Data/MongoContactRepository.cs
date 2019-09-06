@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Contact.API.Dtos;
+using Contact.API.Models;
+using MongoDB.Driver;
+namespace Contact.API.Data
+{
+    public class MongoContactRepository : IContactRepository
+    {
+        private readonly ContactContext _contactContext;
+        public MongoContactRepository(ContactContext contactContext)
+        {
+            _contactContext = contactContext;
+        }
+        public async Task<bool> UpdateContactionInfo(BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
+        {
+
+            //var  filterDefinition=Builders<ContactBook>
+            var contackBook = (await _contactContext.ContactBooks.FindAsync(c => c.UserId == baseUserInfo.UserId, null, cancellationToken)).FirstOrDefault();
+            if (contackBook == null)
+                return true;
+
+            var contactIds = contackBook.Contacts.Select(a => a.UserId);
+            var fileter = Builders<ContactBook>.Filter.And(
+                Builders<ContactBook>.Filter.In(c => c.UserId, contactIds),
+                Builders<ContactBook>.Filter.ElemMatch(c => c.Contacts, contact => contact.UserId == baseUserInfo.UserId)
+                );
+            var update = Builders<ContactBook>.Update
+                .Set("Contacts.$.Name", baseUserInfo.Name)
+                .Set("Contacts.$.Avatar", baseUserInfo.Avatar)
+                .Set("Contacts.$.Company", baseUserInfo.Company)
+                .Set("Contacts.$.title", baseUserInfo.Title);
+            var updateResult = _contactContext.ContactBooks.UpdateMany(fileter, update);
+            return updateResult.MatchedCount == updateResult.ModifiedCount;
+        }
+    }
+}
