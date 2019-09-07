@@ -15,14 +15,37 @@ namespace Contact.API.Data
         {
             _contactContext = contactContext;
         }
-        public Task<bool> AddRequestAsync(ContactApplyRequest contactApplyRequest)
+        public async Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken)
         {
-            //var list = _contactContext.
+            var fileter = Builders<ContactApplyRequest>.Filter.Where(r => r.UserId == request.UserId && r.ApplierID == request.ApplierID);
+            if ((await _contactContext.ContactApplyRequest.CountDocumentsAsync(fileter)) > 0)
+            {
+                var update = Builders<ContactApplyRequest>.Update.Set(r => r.ApplyTime, DateTime.Now);
+                //var options = new UpdateOptions { IsUpsert = true };
+                var reslut = await _contactContext.ContactApplyRequest.UpdateOneAsync(fileter, update, null, cancellationToken);
+                return reslut.MatchedCount == reslut.ModifiedCount && reslut.MatchedCount == 1;
+            }
+            await _contactContext.ContactApplyRequest.InsertOneAsync(request, null, cancellationToken);
+            return true;
+
         }
 
-        public Task<bool> ApprovalAsync(int applierId)
+        public async Task<bool> ApprovalAsync(int userId, int applierId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            if (_contactContext.ContactBooks.CountDocuments(c => c.UserId == userId) == 0)
+            {
+               await  _contactContext.ContactBooks.InsertOneAsync(new ContactBook() {
+                });
+
+            }
+
+            var fileter = Builders<ContactApplyRequest>.Filter.Where(r => r.UserId == userId && r.ApplierID == applierId);
+            var update = Builders<ContactApplyRequest>.Update
+                .Set(r => r.Approvaled, 1)
+                .Set(r => r.HandleTime, DateTime.Now);
+            var reslut = await _contactContext.ContactApplyRequest.UpdateOneAsync(fileter, update, null, cancellationToken);
+            return reslut.MatchedCount == reslut.ModifiedCount && reslut.MatchedCount == 1;
         }
 
         public async Task<List<ContactApplyRequest>> GetRequestListAsync(int userId, CancellationToken cancellationToken)

@@ -15,7 +15,33 @@ namespace Contact.API.Data
         {
             _contactContext = contactContext;
         }
-        public async Task<bool> UpdateContactionInfo(BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
+
+        public async Task<bool> AddContacAsync(int userId, BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
+        {
+
+            if (_contactContext.ContactBooks.CountDocuments(c => c.UserId == userId) == 0)
+            {
+                await _contactContext.ContactBooks.InsertOneAsync(new ContactBook()
+                {
+                     UserId=userId
+                });
+
+            }
+
+            var filter = Builders<ContactBook>.Filter.Eq(c => c.UserId, userId);
+            UpdateDefinition<ContactBook> update = Builders<ContactBook>.Update.AddToSet(c => c.Contacts, new Models.Contact()
+            {
+                UserId = baseUserInfo.UserId,
+                Avatar = baseUserInfo.Avatar,
+                Company = baseUserInfo.Company,
+                Name = baseUserInfo.Name,
+                Title = baseUserInfo.Title,
+            });
+            var result = await _contactContext.ContactBooks.UpdateOneAsync(filter, update, null, cancellationToken);
+            return result.MatchedCount == result.ModifiedCount && result.MatchedCount == 1;
+        }
+
+        public async Task<bool> UpdateContactionInfoAsync(BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
         {
 
             //var  filterDefinition=Builders<ContactBook>

@@ -17,8 +17,8 @@ namespace Contact.API.Models
         public string Title { get; set; }
         //头像地址
         public string Avatar { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
 
-   
 
     }
 }
