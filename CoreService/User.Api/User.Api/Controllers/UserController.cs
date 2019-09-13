@@ -85,7 +85,14 @@ namespace User.Api.Controllers
                 _userContext.Users.Add(user);
                 await _userContext.SaveChangesAsync();
             }
-            return Ok(user.Id);
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Company,
+                user.Title,
+                user.Avatar
+            });
         }
 
         [HttpGet]
@@ -109,10 +116,11 @@ namespace User.Api.Controllers
         {
             var originTags = await _userContext.UserTags.Where(u => u.UserId == UserIdentity.UserId).ToListAsync();
             var newTags = tags.Except(originTags.Select(a => a.Tag));
-            await _userContext.UserTags.AddRangeAsync(newTags.Select(a => new Model.UserTag() {
-                CreatedTime=DateTime.Now,
-                UserId=UserIdentity.UserId,
-                Tag=a
+            await _userContext.UserTags.AddRangeAsync(newTags.Select(a => new Model.UserTag()
+            {
+                CreatedTime = DateTime.Now,
+                UserId = UserIdentity.UserId,
+                Tag = a
             }));
             await _userContext.SaveChangesAsync();
             return Ok();

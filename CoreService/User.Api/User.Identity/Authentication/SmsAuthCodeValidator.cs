@@ -3,6 +3,7 @@ using IdentityServer4.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using User.Identity.Services;
 
@@ -38,13 +39,20 @@ namespace User.Identity.Authentication
                 return;
             }
             //完成用户注册
-            var userID = await _userService.CheckOrCreateAsync(phone);
-            if (userID <= 0)
+            var userInfo = await _userService.CheckOrCreateAsync(phone);
+            if (userInfo == null)
             {
                 context.Result = errorValidationResult;
                 return;
             }
-            context.Result = new GrantValidationResult(userID.ToString(), GrantType);
+
+            var claims = new Claim[] {
+                 new Claim("name",userInfo.Name??string.Empty),
+                 new Claim("company",userInfo.Company??string.Empty),
+                 new Claim("title",userInfo.Title??string.Empty),
+                 new Claim("avatar",userInfo.Avatar??string.Empty)
+            };
+            context.Result = new GrantValidationResult(userInfo.Id.ToString(), GrantType, claims);
         }
     }
 }

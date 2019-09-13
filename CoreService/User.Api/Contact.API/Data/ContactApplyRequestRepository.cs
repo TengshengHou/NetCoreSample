@@ -33,12 +33,7 @@ namespace Contact.API.Data
         public async Task<bool> ApprovalAsync(int userId, int applierId, CancellationToken cancellationToken)
         {
 
-            if (_contactContext.ContactBooks.CountDocuments(c => c.UserId == userId) == 0)
-            {
-               await  _contactContext.ContactBooks.InsertOneAsync(new ContactBook() {
-                });
-
-            }
+           
 
             var fileter = Builders<ContactApplyRequest>.Filter.Where(r => r.UserId == userId && r.ApplierID == applierId);
             var update = Builders<ContactApplyRequest>.Update

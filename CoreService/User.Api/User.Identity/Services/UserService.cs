@@ -1,6 +1,7 @@
 ﻿using DnsClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Reslience;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace User.Identity.Services
             _logger = logger;
         }
 
-        public async Task<int> CheckOrCreateAsync(string phone)
+        public async Task<UserInfo> CheckOrCreateAsync(string phone)
         {
             var form = new Dictionary<string, string>() { { "phone", phone } };
             var context = new FormUrlEncodedContent(form);
@@ -38,10 +39,11 @@ namespace User.Identity.Services
                 var response = await _httpClient.PostAsync(url, context);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var userId = await response.Content.ReadAsStringAsync();
-                    int.TryParse(userId, out int intUserId);
-                    _logger.LogTrace($"complete CheckOrCreateAsync with userid:{ userId}");
-                    return intUserId;
+                    var result = await response.Content.ReadAsStringAsync();
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(result);
+
+                    _logger.LogTrace($"complete CheckOrCreateAsync with userid:{ userInfo.Id}");
+                    return userInfo;
                 }
             }
             catch (Exception ex)
@@ -50,11 +52,11 @@ namespace User.Identity.Services
                 throw ex;
             }
 
-            return 0;
+            return null;
         }
 
 
-     
+
 
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DnsClient;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,9 @@ namespace User.Identity
                 .AddInMemoryClients(Config.GetClient())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetResources());
+            services.AddTransient<IProfileService, ProfileService>();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+
             services.AddSingleton<IDnsQuery>(p =>
              {
                  var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
@@ -49,10 +52,10 @@ namespace User.Identity
             services.AddSingleton(typeof(ResilienceClientFactory), sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<ResilienceClientFactory>>();
-                var httpContextAccessor= sp.GetRequiredService<IHttpContextAccessor>();
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
                 var retryCount = 5;
                 var execptionCountAllowedBeforeBreaking = 5;
-                return new ResilienceClientFactory(logger,httpContextAccessor,retryCount,execptionCountAllowedBeforeBreaking); 
+                return new ResilienceClientFactory(logger, httpContextAccessor, retryCount, execptionCountAllowedBeforeBreaking);
             });
             services.AddSingleton<IHttpClient>(sp =>
             {
