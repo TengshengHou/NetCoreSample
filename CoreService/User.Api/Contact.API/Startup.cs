@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Contact.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,7 +28,21 @@ namespace Contact.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.Configure<AppSettings>(Configuration);
+            services.AddTransient<IContactApplyRequestRepository, ContactApplyRequestRepository>();
+            services.AddTransient<IContactRepository, MongoContactRepository>();
+            services.AddTransient<ContactContext>();
+            
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
+            //{
+            //    Options.RequireHttpsMetadata = false;
+            //    Options.Audience = "contact_api";
+            //    Options.Authority = "http://localhost";
+            //});
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //Service.AddCap()  97 4分时有看到此代码
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,8 +51,9 @@ namespace Contact.API
             if (env.IsDevelopment())
 
                 app.UseDeveloperExceptionPage();
-
+            //app.UseAuthentication();
             app.UseMvc();
         }
     }
 }
+

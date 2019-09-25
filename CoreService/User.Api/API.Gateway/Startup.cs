@@ -27,7 +27,6 @@ namespace Gateway.API
         public void ConfigureServices(IServiceCollection services)
         {
             var authenticationProviderKey = "finbook";
-
             services.AddAuthentication()
             .AddIdentityServerAuthentication(authenticationProviderKey, options =>
                 {

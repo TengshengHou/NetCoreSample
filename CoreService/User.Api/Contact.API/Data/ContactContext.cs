@@ -19,7 +19,7 @@ namespace Contact.API.Data
             var client = new MongoClient(_appSettings.MongContactConnectionString);
             if (client != null)
             {
-                _database = client.GetDatabase(_appSettings.MongContactConnectionString);
+                _database = client.GetDatabase(_appSettings.MongContactDataBase);
             }
         }
 
