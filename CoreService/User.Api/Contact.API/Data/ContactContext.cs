@@ -53,7 +53,7 @@ namespace Contact.API.Data
             get
             {
                 CheckAndCreateCollection("ContactBooks");
-                return _database.GetCollection<ContactApplyRequest>("ContactBooks");
+                return _database.GetCollection<ContactApplyRequest>("ContactApplyRequest");
             }
         }
     }

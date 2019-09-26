@@ -8,10 +8,10 @@ using MongoDB.Driver;
 
 namespace Contact.API.Data
 {
-    public class ContactApplyRequestRepository : IContactApplyRequestRepository
+    public class MongoContactApplyRequestRepository : IContactApplyRequestRepository
     {
         private readonly ContactContext _contactContext;
-        public ContactApplyRequestRepository(ContactContext contactContext)
+        public MongoContactApplyRequestRepository(ContactContext contactContext)
         {
             _contactContext = contactContext;
         }
