@@ -43,27 +43,28 @@
 
 
     {
-      "DownstreamPathTemplate": "/connect/{catchAll}",
+      "DownstreamPathTemplate": "/api/connect/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 19936
+          "Port": 19937
         }
       ],
       "UpstreamPathTemplate": "/connect/{catchAll}",
       "UpstreamHttpMethod": [ "Post" ]
     },
+
     {
-      "DownstreamPathTemplate": "/api/contacts",
+      "DownstreamPathTemplate": "/api/Contact",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 4772
+          "Port": 19937
         }
       ],
-      "UpstreamPathTemplate": "/contacts",
+      "UpstreamPathTemplate": "/Contact",
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
@@ -83,7 +84,7 @@
         }
       ],
       "UpstreamPathTemplate": "/.well-known/{catchAll}",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamHttpMethod": [ "Post", "Get" ]
     }
   ]
 }

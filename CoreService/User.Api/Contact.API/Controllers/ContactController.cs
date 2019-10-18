@@ -7,12 +7,14 @@ using Contact.API.Data;
 using Contact.API.Dtos;
 using Contact.API.Service;
 using Contact.API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contact.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]//验证是否登录
     public class ContactController : BaseController
     {
         IContactApplyRequestRepository _contactApplyRequestRepository;
@@ -131,7 +133,7 @@ namespace Contact.API.Controllers
             BaseUserInfo applier = await _userService.GetBaseUserInfoAsync(applierId);
             var userInfo = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId);
             await _contactRepository.AddContacAsync(UserIdentity.UserId, applier, cancellationToken);
-            await _contactRepository.AddContacAsync(applierId, applier, cancellationToken);
+            await _contactRepository.AddContacAsync(applierId, userInfo, cancellationToken);
             return Ok();
         }
     }

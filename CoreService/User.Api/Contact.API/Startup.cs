@@ -30,17 +30,17 @@ namespace Contact.API
         {
 
             services.Configure<AppSettings>(Configuration);
-            services.AddTransient<IContactApplyRequestRepository, ContactApplyRequestRepository>();
+            services.AddTransient<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
             services.AddTransient<IContactRepository, MongoContactRepository>();
             services.AddTransient<ContactContext>();
-            
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
-            //{
-            //    Options.RequireHttpsMetadata = false;
-            //    Options.Audience = "contact_api";
-            //    Options.Authority = "http://localhost";
-            //});
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
+            {
+                Options.RequireHttpsMetadata = false;
+                Options.Audience = "contact_api";
+                Options.Authority = "http://localhost:81";
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //Service.AddCap()  97 4分时有看到此代码
         }
