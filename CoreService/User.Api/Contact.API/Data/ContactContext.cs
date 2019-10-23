@@ -28,7 +28,7 @@ namespace Contact.API.Data
             var collectionList = _database.ListCollections().ToList();
             var conllectionNames = new List<String>();
             collectionList.ForEach(b => conllectionNames.Add(b["name"].AsString));
-            if (conllectionNames.Contains(collectionName))
+            if (!conllectionNames.Contains(collectionName))
                 _database.CreateCollection(collectionName);
         }
 

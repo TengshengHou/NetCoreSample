@@ -14,7 +14,7 @@ namespace Contact.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]//验证是否登录
+    [Authorize]//验证是否登录
     public class ContactController : BaseController
     {
         IContactApplyRequestRepository _contactApplyRequestRepository;
@@ -36,7 +36,7 @@ namespace Contact.API.Controllers
         [Route("")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var v = _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
+            var v = await _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
             return Ok(v);
         }
 

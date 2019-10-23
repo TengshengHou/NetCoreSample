@@ -36,10 +36,10 @@ namespace User.Identity
 
             services.AddIdentityServer()
                 .AddExtensionGrantValidator<SmsAuthCodeValidator>()
-                .AddDeveloperSigningCredential()
-                .AddInMemoryClients(Config.GetClient())
+                .AddDeveloperSigningCredential()//用于签署令牌创建临时密钥。
+                .AddInMemoryClients(Config.GetClient())//添加客户端
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetResources());
+                .AddInMemoryApiResources(Config.GetResources());//添加api资源
             services.AddTransient<IProfileService, ProfileService>();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 

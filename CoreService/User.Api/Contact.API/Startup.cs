@@ -51,7 +51,7 @@ namespace Contact.API
             if (env.IsDevelopment())
 
                 app.UseDeveloperExceptionPage();
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
