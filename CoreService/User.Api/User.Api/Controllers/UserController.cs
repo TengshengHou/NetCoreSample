@@ -125,5 +125,26 @@ namespace User.Api.Controllers
             await _userContext.SaveChangesAsync();
             return Ok();
         }
+
+
+        [HttpPut]
+        [Route("baseinfo/{userId}")]
+        public async Task<IActionResult> GetBaseInfo(int userId)
+        {
+            var user = await _userContext.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Company,
+                user.Title,
+                user.Avatar
+            });
+        }
+
+
     }
 }

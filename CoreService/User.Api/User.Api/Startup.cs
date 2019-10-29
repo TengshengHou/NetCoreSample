@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Consul;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -35,6 +37,15 @@ namespace User.Api
                 //options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseSqlServer(Configuration.GetConnectionString("sqlservice"), sqlOptions => sqlOptions.UseRowNumberForPaging());
             });
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
+            {
+                Options.RequireHttpsMetadata = false;
+                Options.Audience = "user_api";
+                Options.Authority = "http://localhost:81";
+            });
+
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
             services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
@@ -73,7 +84,7 @@ namespace User.Api
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
-
+            app.UseAuthentication();
             app.UseMvc();
         }
 

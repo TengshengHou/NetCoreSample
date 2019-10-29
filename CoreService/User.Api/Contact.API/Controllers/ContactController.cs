@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Contact.API.Data;
-using Contact.API.Dtos;
+﻿using Contact.API.Data;
 using Contact.API.Service;
 using Contact.API.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Contact.API.Controllers
 {
@@ -95,8 +92,8 @@ namespace Contact.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("apply-request")]
-        public async Task<IActionResult> AddApplyRequestAsync(int userid, CancellationToken cancellationToken)
+        [Route("apply-request/{userId}")]
+        public async Task<IActionResult> AddApplyRequestAsync(int userId, CancellationToken cancellationToken)
         {
             //BaseUserInfo baseUserInfo = await _userService.GetBaseUserInfoAsync(userid);
             //if (baseUserInfo == null)
@@ -105,7 +102,7 @@ namespace Contact.API.Controllers
             //}
             var result = await _contactApplyRequestRepository.AddRequestAsync(new Models.ContactApplyRequest()
             {
-                UserId = userid,
+                UserId = userId,
                 ApplierID = UserIdentity.UserId,
                 Name = UserIdentity.Name,
                 Company = UserIdentity.Company,
@@ -130,7 +127,7 @@ namespace Contact.API.Controllers
             var result = await _contactApplyRequestRepository.ApprovalAsync(UserIdentity.UserId, applierId, cancellationToken);
             if (!result)
                 return BadRequest();
-            BaseUserInfo applier = await _userService.GetBaseUserInfoAsync(applierId);
+            UserIdentity applier = await _userService.GetBaseUserInfoAsync(applierId);
             var userInfo = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId);
             await _contactRepository.AddContacAsync(UserIdentity.UserId, applier, cancellationToken);
             await _contactRepository.AddContacAsync(applierId, userInfo, cancellationToken);

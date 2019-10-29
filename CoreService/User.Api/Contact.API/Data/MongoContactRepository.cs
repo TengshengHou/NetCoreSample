@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Contact.API.Models;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Contact.API.Dtos;
-using Contact.API.Models;
-using MongoDB.Driver;
 namespace Contact.API.Data
 {
     public class MongoContactRepository : IContactRepository
@@ -16,7 +14,7 @@ namespace Contact.API.Data
             _contactContext = contactContext;
         }
 
-        public async Task<bool> AddContacAsync(int userId, BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
+        public async Task<bool> AddContacAsync(int userId, UserIdentity baseUserInfo, CancellationToken cancellationToken)
         {
 
             if (_contactContext.ContactBooks.CountDocuments(c => c.UserId == userId) == 0)
@@ -65,7 +63,7 @@ namespace Contact.API.Data
             return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
         }
 
-        public async Task<bool> UpdateContactionInfoAsync(BaseUserInfo baseUserInfo, CancellationToken cancellationToken)
+        public async Task<bool> UpdateContactionInfoAsync(UserIdentity baseUserInfo, CancellationToken cancellationToken)
         {
 
             //var  filterDefinition=Builders<ContactBook>

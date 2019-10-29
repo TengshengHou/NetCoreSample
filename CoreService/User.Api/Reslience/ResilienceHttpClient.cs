@@ -31,6 +31,32 @@ namespace Reslience
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<HttpResponseMessage> PutAsync<T>(string url, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
+        {
+            //Func<HttpRequestMessage> func = () => CreateHttpRequestMessage(HttpMethod.Post, url, item);
+            Func<HttpRequestMessage> func = () => CreateHttpRequestMessage(HttpMethod.Put, url, item);
+            return await DoPostPutAsync(HttpMethod.Put, url, func, authorizationToken, requestId, authorizationMethod);
+        }
+
+        public async Task<string> GetStringAsync(string url, string authorizationToken = null, string authorizationMethod = "Bearer")
+        {
+            var origin = GetOriginFromUrl(url);
+            return await HttpInvoker(origin, async () =>
+            {
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+                SetAuthorizationHeader(requestMessage);
+                if (authorizationToken != null)
+                    requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authorizationMethod, authorizationToken);
+                var response = await _httpClient.SendAsync(requestMessage);
+                if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    throw new HttpRequestException();
+                if (!response.IsSuccessStatusCode)
+                    return null;
+                return await response.Content.ReadAsStringAsync();
+            });
+        }
+
         public async Task<HttpResponseMessage> PostAsync<T>(string url, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
             Func<HttpRequestMessage> func = () => CreateHttpRequestMessage<T>(HttpMethod.Post, url, item);
@@ -116,5 +142,8 @@ string authorizationToken = null, string requestId = null, string authorizationM
             requestMessage.Content = new FormUrlEncodedContent(form);
             return requestMessage;
         }
+
+
+
     }
 }
