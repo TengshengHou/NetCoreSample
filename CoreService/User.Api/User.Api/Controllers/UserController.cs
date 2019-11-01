@@ -75,7 +75,7 @@ namespace User.Api.Controllers
 
         [Route("check-orcreate")]
         [HttpPost]
-        public async Task<IActionResult> CheckOrCreate(string phone)
+        public async Task<IActionResult> CheckOrCreate([FromForm]string phone)
         {
             var user = await _userContext.Users.SingleOrDefaultAsync(u => u.Phone == phone);
             //if (!await _userContext.Users.AsNoTracking().Include(u => u.Properties).AnyAsync(u => u.Phone == phone))
@@ -87,7 +87,7 @@ namespace User.Api.Controllers
             }
             return Ok(new
             {
-                user.Id,
+                userID=user.Id,
                 user.Name,
                 user.Company,
                 user.Title,

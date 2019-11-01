@@ -32,11 +32,11 @@ namespace User.Identity.Services
         public async Task<UserInfo> CheckOrCreateAsync(string phone)
         {
             var form = new Dictionary<string, string>() { { "phone", phone } };
-            var context = new FormUrlEncodedContent(form);
+            //var context = new FormUrlEncodedContent(form);
             var url = _userServiceUrl + "/api/Users/check-orcreate";
             try
             {
-                var response = await _httpClient.PostAsync(url, context);
+                var response = await _httpClient.PostAsync(url, form);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();

@@ -18,7 +18,13 @@ namespace Core.SimpleTemp.Mvc
             {
                 context.Users.Add(new User.Api.Model.AppUser()
                 {
+                    Phone="18909834602",
                     Name = "admin",
+                });
+                context.Users.Add(new User.Api.Model.AppUser()
+                {
+                    Phone = "18909834603",
+                    Name = "admin2",
                 });
             }
             context.SaveChanges();
