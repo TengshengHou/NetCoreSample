@@ -7,7 +7,7 @@ namespace User.Identity.Dto
 {
     public class UserInfo
     {
-        public int Id { get; set; }
+        public int userID { get; set; }
         public string Name { get; set; }
         //公司
         public string Company { get; set; }

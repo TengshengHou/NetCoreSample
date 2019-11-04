@@ -63,15 +63,15 @@ namespace Contact.API.Controllers
 
 
         /// <summary>
-        /// 好友申请
+        /// 获取好友申请
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("apply-request")]
         public async Task<IActionResult> GetApplyReqeusts(CancellationToken cancellationToken)
         {
             var request = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId, cancellationToken);
-            return Ok();
+            return Ok(request);
         }
 
         ///// <summary>
@@ -79,12 +79,12 @@ namespace Contact.API.Controllers
         ///// </summary>
         ///// <returns></returns>
         //[HttpGet]
+        //[Route("apply-request")]
 
         //public async Task<IActionResult> Get(CancellationToken cancellationToken)
         //{
-        //    var nameHeader = Request.Headers.FirstOrDefault(h => h.Key == "name").Value;
         //    var request = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId, cancellationToken);
-        //    return Ok();
+        //    return Ok(request);
         //}
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Contact.API.Controllers
         /// 通过好友请求
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPut]
         [Route("apply-request")]
         public async Task<IActionResult> AddApplyRequest(int applierId, CancellationToken cancellationToken)
         {

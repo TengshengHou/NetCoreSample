@@ -52,7 +52,7 @@ namespace User.Identity.Authentication
                  new Claim("title",userInfo.Title??string.Empty),
                  new Claim("avatar",userInfo.Avatar??string.Empty)
             };
-            context.Result = new GrantValidationResult(userInfo.Id.ToString(), GrantType, claims);
+            context.Result = new GrantValidationResult(userInfo.userID.ToString(), GrantType, claims);
         }
     }
 }

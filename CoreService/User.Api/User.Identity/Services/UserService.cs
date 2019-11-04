@@ -42,7 +42,7 @@ namespace User.Identity.Services
                     var result = await response.Content.ReadAsStringAsync();
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(result);
 
-                    _logger.LogTrace($"complete CheckOrCreateAsync with userid:{ userInfo.Id}");
+                    _logger.LogTrace($"complete CheckOrCreateAsync with userid:{ userInfo.userID}");
                     return userInfo;
                 }
             }

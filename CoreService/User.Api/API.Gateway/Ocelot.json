@@ -118,7 +118,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Contact/apply-request",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
         "AllowedScopes": [ "contact_api" ]
