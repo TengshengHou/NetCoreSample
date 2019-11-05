@@ -87,7 +87,7 @@ namespace User.Api.Controllers
             }
             return Ok(new
             {
-                userID=user.Id,
+                userID = user.Id,
                 user.Name,
                 user.Company,
                 user.Title,
@@ -127,7 +127,7 @@ namespace User.Api.Controllers
         }
 
 
-        [HttpPut]
+        [HttpGet]
         [Route("baseinfo/{userId}")]
         public async Task<IActionResult> GetBaseInfo(int userId)
         {
@@ -137,7 +137,7 @@ namespace User.Api.Controllers
 
             return Ok(new
             {
-                user.Id,
+                userId = user.Id,
                 user.Name,
                 user.Company,
                 user.Title,

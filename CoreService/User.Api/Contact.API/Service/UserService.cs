@@ -33,7 +33,7 @@ namespace Contact.API.Service
             try
             {
                 var response = await _httpClient.GetStringAsync(url);
-                if (string.IsNullOrEmpty(response))
+                if (!string.IsNullOrEmpty(response))
                 {
                     var userIdentity = JsonConvert.DeserializeObject<UserIdentity>(response);
                     _logger.LogTrace($"complete CheckOrCreateAsync with userid:{ userIdentity.UserId}");

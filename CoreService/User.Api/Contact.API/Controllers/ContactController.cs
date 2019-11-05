@@ -15,13 +15,13 @@ namespace Contact.API.Controllers
     public class ContactController : BaseController
     {
         IContactApplyRequestRepository _contactApplyRequestRepository;
-        IUserService _userService;
+        private readonly IUserService _userService;
         IContactRepository _contactRepository;
-        //public ContactController(IContactApplyRequestRepository contactApplyRequestRepository, IUserService userService, IContactRepository contactRepository)
-        public ContactController(IContactApplyRequestRepository contactApplyRequestRepository, IContactRepository contactRepository)
+        public ContactController(IContactApplyRequestRepository contactApplyRequestRepository, IUserService userService, IContactRepository contactRepository)
+        //public ContactController(IContactApplyRequestRepository contactApplyRequestRepository, IContactRepository contactRepository)
         {
             _contactApplyRequestRepository = contactApplyRequestRepository;
-            //_userService = userService;
+            _userService = userService;
             _contactRepository = contactRepository;
         }
 
@@ -121,7 +121,7 @@ namespace Contact.API.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("apply-request")]
-        public async Task<IActionResult> AddApplyRequest(int applierId, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddApplyRequest([FromForm]int applierId, CancellationToken cancellationToken)
         {
 
             var result = await _contactApplyRequestRepository.ApprovalAsync(UserIdentity.UserId, applierId, cancellationToken);

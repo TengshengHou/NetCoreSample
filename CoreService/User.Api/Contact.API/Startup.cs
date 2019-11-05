@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contact.Api.Data;
 using Contact.API.Data;
 using Contact.API.infrastructure;
+using Contact.API.Service;
 using DnsClient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -47,15 +48,15 @@ namespace Contact.API
                 Options.Authority = "http://localhost:81";
                 Options.SaveToken = true;//保存token 会把token存在
             });
-
+            services.AddHttpContextAccessor();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-
+            
             services.AddSingleton<IDnsQuery>(p =>
             {
                 var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
                 return new LookupClient(serviceConfiguration.Consul.DnsEndpoint.ToIPEndPoint());
             });
-
+            //services.AddScoped<IUserService, UserService>();
             //注册全局单例ResilienceClientFactory
             services.AddSingleton(typeof(ResilienceClientFactory), sp =>
             {
@@ -68,9 +69,8 @@ namespace Contact.API
             services.AddSingleton<IHttpClient>(sp =>
             {
                 return sp.GetRequiredService<ResilienceClientFactory>().GetResilienceHttpClient();
-
             });
-
+            services.AddScoped<IUserService, UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //Service.AddCap()  97 4分时有看到此代码
         }
