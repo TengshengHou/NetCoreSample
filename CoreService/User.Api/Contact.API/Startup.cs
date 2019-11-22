@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contact.Api.Data;
 using Contact.API.Data;
 using Contact.API.infrastructure;
+using Contact.API.integrationEvents.EventHanding;
 using Contact.API.Service;
 using DnsClient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -50,7 +51,7 @@ namespace Contact.API
             });
             services.AddHttpContextAccessor();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-            
+
             services.AddSingleton<IDnsQuery>(p =>
             {
                 var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
@@ -70,6 +71,24 @@ namespace Contact.API
             {
                 return sp.GetRequiredService<ResilienceClientFactory>().GetResilienceHttpClient();
             });
+
+            services.AddTransient<UserProfileChanagedEventHandler>();
+            services.AddCap(options =>
+            {
+                options.UseSqlServer("").UseRabbitMQ("localhost").UseDashboard();
+                // Register to Consul
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5800;
+                    d.NodeId = 1;
+                    d.NodeName = "CAP No.2 Node";
+                });
+            });
+
+
             services.AddScoped<IUserService, UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //Service.AddCap()  97 4分时有看到此代码

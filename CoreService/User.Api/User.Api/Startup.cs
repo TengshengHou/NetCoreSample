@@ -64,6 +64,23 @@ namespace User.Api
                 //自定义全局异常过滤器
                 options.Filters.Add<HttpGlobalExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
+            services.AddCap(options =>
+            {
+                options.UseEntityFramework<UserContext>().UseRabbitMQ("localhost").UseDashboard();
+                // Register to Consul
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5800;
+                    d.NodeId = 1;
+                    d.NodeName = "CAP No.1 Node";
+                });
+            });
+                
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -84,6 +101,7 @@ namespace User.Api
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
+            app.UseCap();
             app.UseAuthentication();
             app.UseMvc();
         }

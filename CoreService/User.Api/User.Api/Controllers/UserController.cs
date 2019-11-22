@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using User.Api.Data;
+using User.Api.Model;
+
 namespace User.Api.Controllers
 {
     [Route("api/Users")]
@@ -14,9 +17,34 @@ namespace User.Api.Controllers
     public class UserController : BaseController
     {
         UserContext _userContext;
-        public UserController(UserContext userContext, ILogger<UserController> logger)
+        private ICapPublisher _capPublisher;
+        public UserController(UserContext userContext, ILogger<UserController> logger, ICapPublisher capPublisher)
         {
             _userContext = userContext;
+            _capPublisher = capPublisher;
+        }
+
+        /// <summary>
+        /// //发布用户变更消息
+        /// </summary>
+        /// <param name="appUser"></param>
+        private void RaiseUserprofileChanagedEvent(AppUser appUser)
+        {
+            if (_userContext.Entry(appUser).Property(nameof(appUser.Name)).IsModified ||
+                _userContext.Entry(appUser).Property(nameof(appUser.Title)).IsModified ||
+                _userContext.Entry(appUser).Property(nameof(appUser.Company)).IsModified ||
+                _userContext.Entry(appUser).Property(nameof(appUser.Avatar)).IsModified
+                )
+            {
+                _capPublisher.Publish("finbook.userapi.userprofilechanged", new Dtos.UserIdentity()
+                {
+                    UserId = appUser.Id,
+                    Name=appUser.Name,
+                    Title=appUser.Title,
+                    Company=appUser.Company,
+                    Avatar=appUser.Avatar
+                }); ;
+            }
         }
 
         [Route("")]
@@ -66,8 +94,14 @@ namespace User.Api.Controllers
             {
                 _userContext.Add(item);
             }
-
-            await _userContext.SaveChangesAsync();
+            using (var transaction = _userContext.Database.BeginTransaction())
+            {
+                _userContext.Users.Update(user);
+                await _userContext.SaveChangesAsync();
+                //发布用户变更消息
+                RaiseUserprofileChanagedEvent(user);
+                transaction.Commit();
+            }
             return Json(user);
         }
 
