@@ -42,3 +42,9 @@ CoreService/User.Api/Reslience/bin/
 CoreService/User.Api/Reslience/obj/
 CoreService/User.Api/Contact.API/obj/
 CoreService/User.Api/Contact.API/bin/
+CoreService/User.Api/Project.Api/bin/
+CoreService/User.Api/Project.Api/obj/
+CoreService/User.Api/Project.Domain/bin/
+CoreService/User.Api/Project.Infrastructure/obj/
+CoreService/User.Api/Project.Infrastructure/bin/
+CoreService/User.Api/Project.Domain/obj/
