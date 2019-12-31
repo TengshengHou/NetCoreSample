@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Project.Domain.AggergatesModel
 {
-    public interface IProjectRepository : IRepository<Project> 
+    public interface IProjectRepository : IRepository<Project>
     {
         Task<Project> GetAsync(int id);
-        Task<Project> Add(Project project);
-        Task<Project> Update(Project project);
+        Project Add(Project project);
+        void Update(Project project);
     }
 }

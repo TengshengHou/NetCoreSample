@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Project.Domain.SeedWork;
+using Project.Infrastructure.EntityConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +12,28 @@ namespace Project.Infrastructure
 {
     public class ProjectContext : DbContext, IUnitOfWork
     {
-        public Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+        private Mediator _mediator;
+        public DbSet<Project.Domain.AggergatesModel.Project> projects { get; set; }
+        public ProjectContext(DbContextOptions<ProjectContext> options) : base(options)
         {
-            throw new NotImplementedException();
+            base.SaveChangesAsync();
+        }
+        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+        {
+
+            await base.SaveChangesAsync();
+            await _mediator.DispatchDomainEventsAsync(this);
+            return true;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ProjectContrbutorEnirttyConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectEnirttyConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectPropertyEnirttyConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectViewEnirttyConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectVisibleRuleEnirttyConfiguration());
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

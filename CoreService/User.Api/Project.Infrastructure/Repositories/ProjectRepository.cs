@@ -1,4 +1,5 @@
-﻿using Project.Domain.AggergatesModel;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.Domain.AggergatesModel;
 using Project.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -9,25 +10,40 @@ namespace Project.Infrastructure
 {
     public class ProjectRepository : IProjectRepository
     {
-        public ProjectRepository()
+        private readonly ProjectContext _context;
+        public IUnitOfWork UnitOfWork => _context;
+        public ProjectRepository(ProjectContext context)
         {
+            _context = context;
         }
 
-        public IUnitOfWork UnitOfWork => throw new NotImplementedException();
 
-        public Task<Domain.AggergatesModel.Project> Add(Domain.AggergatesModel.Project project)
+
+        public Domain.AggergatesModel.Project Add(Domain.AggergatesModel.Project project)
         {
-            throw new NotImplementedException();
+            //判断是否ID为0
+            if (project.IsTransient())
+            {
+                return _context.Add(project).Entity;
+            }
+            return project;
         }
 
-        public Task<Domain.AggergatesModel.Project> GetAsync(int id)
+        public async Task<Domain.AggergatesModel.Project> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var proejct = await _context.projects
+                .Include(p => p.Properties)
+                .Include(p => p.Viewers)
+                .Include(p => p.Contributors)
+                .Include(p => p.VisibleRule).SingleOrDefaultAsync(a => a.Id == id);
+            return proejct;
         }
 
-        public Task<Domain.AggergatesModel.Project> Update(Domain.AggergatesModel.Project project)
+        public void Update(Domain.AggergatesModel.Project project)
         {
-            throw new NotImplementedException();
+            _context.Update(project);
         }
+
+       
     }
 }

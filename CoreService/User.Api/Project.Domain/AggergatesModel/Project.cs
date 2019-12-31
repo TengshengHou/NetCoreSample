@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Project.Domain.AggergatesModel
 {
-    public class Project : IAggregateRoot, Entity
+    public class Project : Entity, IAggregateRoot
     {
 
         /// <summary>
