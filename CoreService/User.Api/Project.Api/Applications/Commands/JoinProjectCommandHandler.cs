@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Domain.AggergatesModel;
+using Project.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,9 @@ namespace Project.Api.Applications.Commands
             var project = await _projectRepository.GetAsync(request.Contributor.ProjectId);
             if (project == null)
                 throw new Domain.Exceptions.ProjectDomainException($"project ot  found:{request.Contributor.ProjectId}");
+
+            if (project.UserId == request.Contributor.UserId)
+                throw new ProjectDomainException("you cannot  join your own project");
 
             project.AddContributor(request.Contributor);
             await _projectRepository.UnitOfWork.SaveEntitiesAsync();

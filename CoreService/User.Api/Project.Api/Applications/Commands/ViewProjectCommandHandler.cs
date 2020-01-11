@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Domain.AggergatesModel;
+using Project.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace Project.Api.Applications.Commands
             var project = await _projectRepository.GetAsync(request.ProjectId);
             if (project == null)
                 throw new Domain.Exceptions.ProjectDomainException($"project ot  found:{request.ProjectId}");
+            if (project.UserId == request.UserId)
+                throw new ProjectDomainException("you cannot  view your own project");
 
             project.AddViewer(request.UserId, request.UserName, request.Avatar);
             await _projectRepository.UnitOfWork.SaveChangesAsync();

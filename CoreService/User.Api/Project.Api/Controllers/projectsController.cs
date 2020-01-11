@@ -12,12 +12,13 @@ using Project.Api.Applications.Queries;
 namespace Project.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class ProjectControlle : BaseController
+    [ApiController]
+    public class projectsController : BaseController
     {
         private IMediator _mediator;
         private IRecommendService _recommendService;
         private IProjectQueries _projectQueries;
-        public ProjectControlle(IMediator mediator, IRecommendService recommendService, IProjectQueries projectQueries)
+        public projectsController(IMediator mediator, IRecommendService recommendService, IProjectQueries projectQueries)
         {
             _mediator = mediator;
             _recommendService = recommendService;
@@ -26,6 +27,8 @@ namespace Project.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatProject([FromBody] Domain.AggergatesModel.Project project)
         {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
             var command = new CreateCommand() { Project = project };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -35,7 +38,7 @@ namespace Project.Api.Controllers
         public async Task<IActionResult> GetProjects()
         {
             var projects = await _projectQueries.GetMyProjectsByUserId(UserIdentity.UserId);
-            return projects;
+            return Ok(projects);
         }
         [Route("my/{projectId}")]
         [HttpGet]

@@ -14,9 +14,10 @@ namespace Project.Infrastructure
     {
         private Mediator _mediator;
         public DbSet<Project.Domain.AggergatesModel.Project> projects { get; set; }
-        public ProjectContext(DbContextOptions<ProjectContext> options) : base(options)
+        public ProjectContext(DbContextOptions<ProjectContext> options, Mediator mediator) : base(options)
         {
             base.SaveChangesAsync();
+            _mediator = mediator;
         }
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
