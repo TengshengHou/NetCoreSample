@@ -211,7 +211,13 @@ namespace Project.Domain.AggergatesModel
             };
             if (!Viewers.Any(v => v.UserId == UserId))
                 Viewers.Add(viewer);
-            AddDomainEvent(new ProjectViewedEvent { Viewer = viewer });
+            AddDomainEvent(new ProjectViewedEvent
+            {
+                Company = this.Company,
+                Introduction = this.Introduction,
+                Avatar = this.Avatar,
+                Viewer = viewer
+            });
         }
 
         public void AddContributor(ProjectContributor contributor)
@@ -219,7 +225,13 @@ namespace Project.Domain.AggergatesModel
             if (!Contributors.Any(v => v.UserId == UserId))
             {
                 Contributors.Add(contributor);
-                AddDomainEvent(new ProjectJoinedEvent { Contributor = contributor });
+                AddDomainEvent(new ProjectJoinedEvent
+                {
+                    Company = this.Company,
+                    Introduction = this.Introduction,
+                    Avatar = this.Avatar,
+                    Contributor = contributor
+                });
             }
         }
 

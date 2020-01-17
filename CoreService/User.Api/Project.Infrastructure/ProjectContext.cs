@@ -12,9 +12,9 @@ namespace Project.Infrastructure
 {
     public class ProjectContext : DbContext, IUnitOfWork
     {
-        private Mediator _mediator;
+        private IMediator _mediator;
         public DbSet<Project.Domain.AggergatesModel.Project> projects { get; set; }
-        public ProjectContext(DbContextOptions<ProjectContext> options, Mediator mediator) : base(options)
+        public ProjectContext(DbContextOptions<ProjectContext> options, IMediator mediator) : base(options)
         {
             base.SaveChangesAsync();
             _mediator = mediator;

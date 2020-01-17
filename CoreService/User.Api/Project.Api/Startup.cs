@@ -50,7 +50,27 @@ namespace Project.Api
                 Options.SaveToken = true;
             });
 
-     
+
+            services.AddCap(options =>
+            {
+
+                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard(a=> { 
+                    
+                });
+                options.
+                // Register to Consul
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5800;
+                    d.NodeId = 1;
+                    d.NodeName = "CAP No.1 Node";
+                });
+            });
+
+
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
             services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>

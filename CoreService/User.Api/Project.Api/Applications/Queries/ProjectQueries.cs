@@ -24,7 +24,7 @@ projects.id=@projectId";
             using (var conn = new SqlConnection(_connStr))
             {
                 conn.Open();
-                var result = await conn.QueryAsync<dynamic>("", new { projectId });
+                var result = await conn.QueryAsync<dynamic>(sql, new { projectId });
                 return result;
             }
         }

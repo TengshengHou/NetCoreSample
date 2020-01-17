@@ -30,6 +30,7 @@ namespace Project.Api.Controllers
             if (project == null)
                 throw new ArgumentNullException(nameof(project));
             var command = new CreateCommand() { Project = project };
+            command.Project.UserId = UserIdentity.UserId;
             var result = await _mediator.Send(command);
             return Ok(result);
         }
