@@ -21,13 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reslience", "Reslience\Resl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact.API", "Contact.API\Contact.API.csproj", "{1C0098F5-3CD8-4F75-9958-26E031D480CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Api", "Project.Api\Project.Api.csproj", "{6662F352-09F6-4D31-B79A-CE403D9BB2FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Api", "Project.Api\Project.Api.csproj", "{6662F352-09F6-4D31-B79A-CE403D9BB2FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{60E646A6-01D5-4B5D-A154-6065783EB5C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{FB11FE34-90DC-4DAC-9E6B-BEA2CDFD5792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{FB11FE34-90DC-4DAC-9E6B-BEA2CDFD5792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{20537BEE-9B8A-4C16-8A2D-54907192615D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{20537BEE-9B8A-4C16-8A2D-54907192615D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommend.API", "recommend\Recommend.API\Recommend.API.csproj", "{F6202248-5692-454B-B848-BB03B9BE34F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{20537BEE-9B8A-4C16-8A2D-54907192615D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20537BEE-9B8A-4C16-8A2D-54907192615D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20537BEE-9B8A-4C16-8A2D-54907192615D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6202248-5692-454B-B848-BB03B9BE34F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6202248-5692-454B-B848-BB03B9BE34F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6202248-5692-454B-B848-BB03B9BE34F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6202248-5692-454B-B848-BB03B9BE34F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

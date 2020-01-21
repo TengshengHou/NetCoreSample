@@ -10,6 +10,6 @@ namespace Project.Api.Applications.IntegrationEvents
     {
         public string Company { get; set; }
         public string Introduction { get; set; }
-        public ProjectContributor Viewer { get; set; }
+        public ProjectContributor Contributor { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Consul;
+using DotNetCore.CAP.Dashboard.NodeDiscovery;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -54,10 +55,10 @@ namespace Project.Api
             services.AddCap(options =>
             {
 
-                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard(a=> { 
-                    
+                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard(a =>
+                {
+
                 });
-                options.
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {
@@ -65,7 +66,7 @@ namespace Project.Api
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "localhost";
                     d.CurrentNodePort = 5800;
-                    d.NodeId = 1;
+                    d.NodeId = "1";
                     d.NodeName = "CAP No.1 Node";
                 });
             });
@@ -114,7 +115,7 @@ namespace Project.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>

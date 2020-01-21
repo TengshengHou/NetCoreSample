@@ -48,3 +48,5 @@ CoreService/User.Api/Project.Domain/bin/
 CoreService/User.Api/Project.Infrastructure/obj/
 CoreService/User.Api/Project.Infrastructure/bin/
 CoreService/User.Api/Project.Domain/obj/
+CoreService/User.Api/recommend/Recommend.API/obj/
+CoreService/User.Api/recommend/Recommend.API/bin/
