@@ -1,4 +1,5 @@
 ﻿using DotNetCore.CAP;
+using Recommend.API.Data;
 using Recommend.API.IntegrationEvents;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,15 @@ namespace Recommend.API.IntegrationEventHandels
 {
     public class ProjectCreatedintegrationEventHandel : ICapSubscribe
     {
-        public ProjectCreatedintegrationEventHandel()
+        private RecommendDbContext _dbContext;
+        public ProjectCreatedintegrationEventHandel(RecommendDbContext dbContext)
         {
-
+            _dbContext = dbContext;
         }
         public Task CreateRecommendFromProject(ProjectCreatedintegrationEvent @event)
         {
             //@event
+            return Task.CompletedTask;
         }
     }
 }
