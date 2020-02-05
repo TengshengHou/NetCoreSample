@@ -38,24 +38,27 @@ namespace User.Api
                 options.UseSqlServer(Configuration.GetConnectionString("sqlservice"), sqlOptions => sqlOptions.UseRowNumberForPaging());
             });
 
+            //认证注册
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
             {
                 Options.RequireHttpsMetadata = false;
                 Options.Audience = "user_api";
-                Options.Authority = "http://localhost:81";
+                Options.Authority = "http://localhost:81";//网关地址
             });
 
+            //注册配置文件
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
+            //注册Consul信息（在applicationLifetime.ApplicationStarted 注册进Consult服务器）
             services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
             {
-                var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
+                var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;//在Consul中的服务名称
 
                 if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
                 {
                     // if not configured, the client will use the default value "127.0.0.1:8500"
-                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);//Consul地址
                 }
             }));
 
@@ -65,7 +68,7 @@ namespace User.Api
                 options.Filters.Add<HttpGlobalExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-
+            //CAP
             services.AddCap(options =>
             {
                 options.UseEntityFramework<UserContext>().UseRabbitMQ("localhost").UseDashboard();
@@ -75,12 +78,12 @@ namespace User.Api
                     d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "localhost";
-                    d.CurrentNodePort = 5800;
-                    d.NodeId = 1;
-                    d.NodeName = "CAP No.1 Node";
+                    d.CurrentNodePort = 5000;
+                    d.NodeId = 2;
+                    d.NodeName = "CAP User API";
                 });
             });
-                
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -106,8 +109,10 @@ namespace User.Api
             app.UseMvc();
         }
 
+
         private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
+            #region 注册进Consul
             var features = app.Properties["server.Features"] as FeatureCollection;
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
@@ -133,11 +138,13 @@ namespace User.Api
                 };
                 consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
             }
+            #endregion
         }
 
         private void DeRegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
 
+            #region 卸载Consul注册
             var features = app.Properties["server.Features"] as FeatureCollection;
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
@@ -147,6 +154,7 @@ namespace User.Api
                 var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
                 consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
             }
+            #endregion
         }
 
 

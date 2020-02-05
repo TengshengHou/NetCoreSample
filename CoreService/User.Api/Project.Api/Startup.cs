@@ -34,6 +34,10 @@ namespace Project.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //注册配置文件
+            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+
+            //数据库
             services.AddDbContext<ProjectContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("sqlservice"), sqlOptions =>
@@ -42,6 +46,8 @@ namespace Project.Api
                     sqlOptions.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name);
                 });
             });
+
+            //认证
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
             {
@@ -51,29 +57,9 @@ namespace Project.Api
                 Options.SaveToken = true;
             });
 
+            
 
-            services.AddCap(options =>
-            {
-
-                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard(a =>
-                {
-
-                });
-                // Register to Consul
-                options.UseDiscovery(d =>
-                {
-                    d.DiscoveryServerHostName = "localhost";
-                    d.DiscoveryServerPort = 8500;
-                    d.CurrentNodeHostName = "localhost";
-                    d.CurrentNodePort = 5800;
-                    d.NodeId = "1";
-                    d.NodeName = "CAP No.1 Node";
-                });
-            });
-
-
-            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
-
+            //注册Consul信息（在applicationLifetime.ApplicationStarted 注册进Consult服务器）
             services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
             {
                 var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
@@ -91,6 +77,24 @@ namespace Project.Api
             {
                 return new ProjectQueries(Configuration.GetConnectionString("sqlservice"));
             });
+
+            //CAP
+            services.AddCap(options =>
+            {
+
+                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard();
+                // Register to Consul
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;//Consul配置
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 54035;//当前项目启动端口
+                    d.NodeId = "1";
+                    d.NodeName = "CAP Project.Api";
+                });
+            });
+
             services.AddMediatR();
             services.AddControllers();
         }
@@ -112,10 +116,8 @@ namespace Project.Api
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
-            app.UseHttpsRedirection();
 
             app.UseRouting();
-            
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>
@@ -126,6 +128,7 @@ namespace Project.Api
 
         private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
+            #region 注册进Consul
             var features = app.Properties["server.Features"] as FeatureCollection;
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
@@ -150,12 +153,14 @@ namespace Project.Api
                     Port = address.Port
                 };
                 consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-            }
+            } 
+            #endregion
         }
 
         private void DeRegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
 
+            #region 卸载Consul注册
             var features = app.Properties["server.Features"] as FeatureCollection;
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
@@ -164,7 +169,8 @@ namespace Project.Api
             {
                 var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
                 consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-            }
+            } 
+            #endregion
         }
 
     }

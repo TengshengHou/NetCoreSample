@@ -8,7 +8,7 @@ namespace Recommend.API.Mdoels
     public class ProjectRecommend
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public int FromUserId { get; set; }
         public string FromUserName { get; set; }
         public string FromUserAvatar { get; set; }
@@ -19,8 +19,10 @@ namespace Recommend.API.Mdoels
         public EnumRecommendType RecommendType { get; set; }
 
         public int ProjectId { get; set; }
-
-        public string PrjectAvatart { get; set; }
+        /// <summary>
+        /// 项目logo
+        /// </summary>
+        public string PrjectAvatar { get; set; }
         /// <summary>
         /// 公司名称
         /// </summary>

@@ -26,15 +26,26 @@ namespace Contact.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 获取当前用户好友列表
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var v = await _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
-            return Ok(v);
+            var list = await _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
+            return Ok(list);
+        }
+        /// <summary>
+        /// 获取指定用户好友列表，通过网关屏蔽，外网访问不了
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("userId")]
+        public async Task<IActionResult> Get(int userId, CancellationToken cancellationToken)
+        {
+            var list = await _contactRepository.GetContactsAsync(userId, cancellationToken);
+            return Ok(list);
         }
 
 

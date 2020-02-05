@@ -9,10 +9,11 @@ namespace Recommend.API.Data
 {
     public class RecommendDbContext : DbContext
     {
-        public RecommendDbContext(DbContextOptions<RecommendDbContext> options):base(options)
+        public RecommendDbContext(DbContextOptions<RecommendDbContext> options) : base(options)
         {
 
         }
+        public DbSet<ProjectRecommend> Recommends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

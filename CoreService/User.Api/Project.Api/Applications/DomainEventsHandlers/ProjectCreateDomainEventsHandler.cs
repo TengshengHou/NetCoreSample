@@ -23,6 +23,11 @@ namespace Project.Api.Applications.DomainEventsHandlers
             var @event = new ProjectCreatedintegrationEvent()
             {
                 UserId = notification.Project.UserId,
+                Company = notification.Project.Company,
+                FinStage = notification.Project.FinStage,
+                Introduction = notification.Project.Introduction,
+                PrjectAvatart = notification.Project.Avatar,
+                Tags = notification.Project.Tags,
                 CreateTime = DateTime.Now,
                 ProjectId = notification.Project.Id,
 

@@ -9,11 +9,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetCore.CAP" Version="2.2.1" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.1" />
     <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Reslience\Reslience.csproj" />
   </ItemGroup>
 
 </Project>
