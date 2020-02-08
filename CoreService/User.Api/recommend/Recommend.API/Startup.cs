@@ -1,4 +1,5 @@
 ﻿using DnsClient;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,8 +11,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recommend.API.Data;
 using Recommend.API.infrastructure;
+using Recommend.API.IntegrationEventHandels;
 using Recommend.API.Service;
 using Reslience;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Recommend.API
 {
@@ -30,8 +33,11 @@ namespace Recommend.API
             //注册配置文件
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             //注册业务服务
+          
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<ProjectCreatedintegrationEventHandel>();
+            services.AddHttpContextAccessor();
 
             //提供Consul调用支持
             services.AddSingleton<IDnsQuery>(p =>
@@ -64,6 +70,15 @@ namespace Recommend.API
                 });
             });
 
+            //认证注册
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Options =>
+            {
+                Options.RequireHttpsMetadata = false;
+                Options.Audience = "user_api";
+                Options.Authority = "http://localhost:81";//网关地址
+            });
+
             //CAP
             services.AddCap(options =>
             {
@@ -72,7 +87,7 @@ namespace Recommend.API
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {
-                    
+
                     d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;//Consul配置
                     d.CurrentNodeHostName = "localhost";
@@ -91,6 +106,7 @@ namespace Recommend.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseAuthentication();
             app.UseCap();
             app.UseMvc();
         }

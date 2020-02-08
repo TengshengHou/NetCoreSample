@@ -27,6 +27,7 @@ namespace Recommend.API.IntegrationEventHandels
         /// </summary>
         /// <param name="event"></param>
         /// <returns></returns>
+        [CapSubscribe("finbook.projectapi.projectcreated")]
         public async Task CreateRecommendFromProject(ProjectCreatedintegrationEvent @event)
         {
             var fromUser = await _userService.GetBaseUserInfoAsync(@event.UserId);
