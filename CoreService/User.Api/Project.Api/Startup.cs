@@ -83,7 +83,7 @@ namespace Project.Api
             services.AddCap(options =>
             {
 
-                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("localhost").UseDashboard();
+                options.UseEntityFramework<ProjectContext>().UseRabbitMQ("192.168.2.2").UseDashboard();
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {

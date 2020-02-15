@@ -71,7 +71,7 @@ namespace User.Api
             //CAP
             services.AddCap(options =>
             {
-                options.UseEntityFramework<UserContext>().UseRabbitMQ("localhost").UseDashboard();
+                options.UseEntityFramework<UserContext>().UseRabbitMQ("192.168.2.2").UseDashboard();
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {

@@ -96,7 +96,7 @@ namespace Contact.API
             //CAP
             services.AddCap(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("sqlservice")).UseRabbitMQ("localhost").UseDashboard();
+                options.UseSqlServer(Configuration.GetConnectionString("sqlservice")).UseRabbitMQ("192.168.2.2").UseDashboard();
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {

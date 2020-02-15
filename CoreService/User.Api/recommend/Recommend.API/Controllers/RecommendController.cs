@@ -10,7 +10,7 @@ using Recommend.API.Service;
 
 namespace Recommend.API.Controllers
 {
-    [Route("api/[Recommends]")]
+    [Route("api/Recommends")]
     [ApiController]
     public class RecommendController : BaseController
     {

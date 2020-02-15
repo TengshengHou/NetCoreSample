@@ -33,7 +33,7 @@ namespace Recommend.API
             //注册配置文件
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             //注册业务服务
-          
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<ProjectCreatedintegrationEventHandel>();
@@ -83,7 +83,9 @@ namespace Recommend.API
             services.AddCap(options =>
             {
 
-                options.UseEntityFramework<RecommendDbContext>().UseRabbitMQ("localhost").UseDashboard();
+                options.UseEntityFramework<RecommendDbContext>().
+                UseRabbitMQ("192.168.2.2").
+                UseDashboard();
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {
