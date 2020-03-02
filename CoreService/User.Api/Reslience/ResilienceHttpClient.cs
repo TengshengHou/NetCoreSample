@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Wrap;
+using zipkin4net.Transport.Http;
 
 namespace Reslience
 {
@@ -22,9 +23,9 @@ namespace Reslience
         private readonly ConcurrentDictionary<string, PolicyWrap> _policyWrappers;
         private ILogger _logger;
         private IHttpContextAccessor _httpContextAccessor;
-        public ResilienceHttpClient(Func<string, IEnumerable<Policy>> policyCreator, ILogger logger, IHttpContextAccessor httpContextAccessor)
+        public ResilienceHttpClient(string applicationName, Func<string, IEnumerable<Policy>> policyCreator, ILogger logger, IHttpContextAccessor httpContextAccessor)
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient(new TracingHandler(applicationName));
             _policyWrappers = new ConcurrentDictionary<string, PolicyWrap>();
             _logger = logger;
             _policyCreator = policyCreator;

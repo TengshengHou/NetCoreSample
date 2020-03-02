@@ -78,7 +78,7 @@ namespace Contact.API
                     cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
                 }
             }));
-            
+
             //注册全局单例ResilienceClientFactory
             services.AddSingleton(typeof(ResilienceClientFactory), sp =>
             {
@@ -160,7 +160,7 @@ namespace Contact.API
                     Port = address.Port
                 };
                 consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-            } 
+            }
             #endregion
         }
 
@@ -176,9 +176,11 @@ namespace Contact.API
             {
                 var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
                 consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-            } 
+            }
             #endregion
         }
+
+    
     }
 }
 

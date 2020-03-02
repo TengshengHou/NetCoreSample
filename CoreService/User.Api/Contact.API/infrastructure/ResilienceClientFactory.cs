@@ -29,7 +29,7 @@ namespace Contact.API.infrastructure
 
         }
 
-        public ResilienceHttpClient GetResilienceHttpClient() => new ResilienceHttpClient(origin => CreatePolicys(origin), _logger, _httpContextAccessor);
+        public ResilienceHttpClient GetResilienceHttpClient() => new ResilienceHttpClient("Contact.API", origin => CreatePolicys(origin), _logger, _httpContextAccessor);
 
 
         private Policy[] CreatePolicys(string origin)

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Project.Api.Applications.Queries;
 using Project.Api.Applications.Service;
@@ -20,6 +21,10 @@ using Project.Infrastructure;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using zipkin4net;
+using zipkin4net.Middleware;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
 
 namespace Project.Api
 {
@@ -101,7 +106,7 @@ namespace Project.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Microsoft.AspNetCore.Hosting.IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Microsoft.AspNetCore.Hosting.IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -121,6 +126,7 @@ namespace Project.Api
             app.UseRouting();
             app.UseAuthorization();
             app.UseAuthentication();
+            RegisterZipkinTrace(app, loggerFactory, applicationLifetime);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -172,6 +178,25 @@ namespace Project.Api
                 consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
             } 
             #endregion
+        }
+
+        private void RegisterZipkinTrace(IApplicationBuilder app, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Hosting.IApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStarted.Register(() =>
+            {
+                TraceManager.SamplingRate = 1.0f;
+                var logger = new TracingLogger(loggerFactory, "zipkin4net");
+                var httpSender = new HttpZipkinSender("http://192.168.2.2:9411", "application/json");
+                var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
+
+                var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();
+                TraceManager.RegisterTracer(consoleTracer);
+
+                TraceManager.RegisterTracer(tracer);
+                TraceManager.Start(logger);
+            });
+            lifetime.ApplicationStopped.Register(() => TraceManager.Stop());
+            app.UseTracing("Project.API");
         }
 
     }

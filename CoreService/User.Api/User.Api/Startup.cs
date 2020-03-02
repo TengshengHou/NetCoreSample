@@ -18,6 +18,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using User.Api.Data;
 using User.Api.Filters;
+using zipkin4net;
+using zipkin4net.Middleware;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
 
 namespace User.Api
 {
@@ -87,7 +91,7 @@ namespace User.Api
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
+            IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -104,6 +108,10 @@ namespace User.Api
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
+
+            RegisterZipkinTrace(app, loggerFactory, applicationLifetime);
+
+
             app.UseCap();
             app.UseAuthentication();
             app.UseMvc();
@@ -157,7 +165,24 @@ namespace User.Api
             #endregion
         }
 
+        private void RegisterZipkinTrace(IApplicationBuilder app, ILoggerFactory loggerFactory, IApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStarted.Register(() =>
+            {
+                TraceManager.SamplingRate = 1.0f;
+                var logger = new TracingLogger(loggerFactory, "zipkin4net");
+                var httpSender = new HttpZipkinSender("http://192.168.2.2:9411", "application/json");
+                var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
 
+                var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();
+                TraceManager.RegisterTracer(consoleTracer);
+
+                TraceManager.RegisterTracer(tracer);
+                TraceManager.Start(logger);
+            });
+            lifetime.ApplicationStopped.Register(() => TraceManager.Stop());
+            app.UseTracing("User.Api");
+        }
 
     }
 }
