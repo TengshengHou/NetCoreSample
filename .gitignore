@@ -51,3 +51,6 @@ CoreService/User.Api/Project.Domain/obj/
 CoreService/User.Api/recommend/Recommend.API/obj/
 CoreService/User.Api/recommend/Recommend.API/bin/
 SQLHelperDemo/SQLHelperDemo/obj/
+helloApi/.vs/
+helloApi/helloApi/obj/
+helloApi/helloApi/bin/
