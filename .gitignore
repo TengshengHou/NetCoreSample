@@ -54,3 +54,5 @@ SQLHelperDemo/SQLHelperDemo/obj/
 helloApi/.vs/
 helloApi/helloApi/obj/
 helloApi/helloApi/bin/
+CoreService/helloApi/bin/
+CoreService/helloApi/obj/
