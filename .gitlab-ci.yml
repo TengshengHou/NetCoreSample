@@ -1,0 +1,36 @@
+stages:
+  - build
+  - deploy
+# 构建
+helloapi-build-job:
+  stage: build
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  only:
+    - master
+  cache:
+    untracked: true
+  script:
+    - dotnet restore
+    - dotnet publish -o ./out -c Release
+  artifacts:
+    # 可以缓存在gitlab的流水线记录中，供直接下载
+    expire_in: 30 days
+    paths:
+      - out/
+  tags:
+    - helloapi-build
+# 发布正式
+helloapi-deploy-job:
+  stage: deploy
+  only:
+    - master
+  dependencies:
+    - helloapi-build-job  # 这里一定要依赖build-job，不然dockerfile里面的out目录无法使用
+  script:
+    - sh ./helloApi/helloApi/check-images.sh
+    - docker images
+    - docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
+    - docker images
+    - docker run -d --name calculator -p 5001:5001 helloapi
+  tags:
+    - helloapi-deploy
