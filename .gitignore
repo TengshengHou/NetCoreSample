@@ -56,3 +56,6 @@ helloApi/helloApi/obj/
 helloApi/helloApi/bin/
 CoreService/helloApi/bin/
 CoreService/helloApi/obj/
+CoreService/helloApi/.vs/
+CoreService/helloApi/helloApi/obj/
+CoreService/helloApi/helloApi/bin/
