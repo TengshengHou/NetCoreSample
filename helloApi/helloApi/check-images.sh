@@ -1,5 +1,5 @@
-if [ $(docker ps -a --format {{.Names}} | grep helloApi) ]
+if [ $(docker ps -a --format {{.Names}} | grep helloapi) ]
 then
-    docker rm -f helloApi
-    docker rmi helloApi
+    docker rm -f helloapi
+    docker rmi helloapi
 fi
