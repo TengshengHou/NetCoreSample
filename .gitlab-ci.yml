@@ -10,6 +10,7 @@ helloapi-build-job:
   cache:
     untracked: true
   script:
+    - cd helloApi
     - dotnet restore
     - dotnet publish -o ./out -c Release
   artifacts:
