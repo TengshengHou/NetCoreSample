@@ -12,7 +12,7 @@ helloapi-build-job:
   script:
     - cd helloApi
     - dotnet restore
-    - dotnet publish -o /out -c Release
+    - dotnet publish -o ../out -c Release
   artifacts:
     # 可以缓存在gitlab的流水线记录中，供直接下载
     expire_in: 30 days
