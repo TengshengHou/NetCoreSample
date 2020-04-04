@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM microsoft/dotnet:2.2-aspnetcore-runtime
 WORKDIR /app
 COPY out/ /app
 ENTRYPOINT [ "dotnet", "/app/helloApi.dll" ]
