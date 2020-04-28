@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DnsClient;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Recommend.API.Data;
 
 namespace helloApi.Controllers
 {
@@ -12,9 +15,13 @@ namespace helloApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult Get(IDnsQuery dnsquery, IOptions<ServiceDisvoveryOptions> serviceDisvoveryOptions)
         {
-            return new string[] { "value1", "value2" };
+            var address = dnsquery.ResolveService("service.consul", serviceDisvoveryOptions.Value.ServiceName);
+            var addressList = address.First().AddressList;
+            var host = addressList.Any() ? addressList.First().ToString() : addressList.First().Address.ToString();
+            var port = address.First().Port;
+            return Ok($"http://{host}:{port}");
         }
 
         // GET api/values/5
