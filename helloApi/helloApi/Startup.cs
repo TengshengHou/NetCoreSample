@@ -28,15 +28,28 @@ namespace helloApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //启动
+            applicationLifetime.ApplicationStarted.Register(() =>
+            {
+                RegisterService(app, serviceOptions, consul);
+            });
+            //停止
+            applicationLifetime.ApplicationStopped.Register(() =>
+            {
+                DeRegisterService(app, serviceOptions, consul);
+            });
+         
             app.UseMvc();
         }
 
