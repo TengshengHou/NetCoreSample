@@ -48,12 +48,13 @@ namespace helloApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>().UseSerilog(
-                (ctx, config) =>
-                {
-                    config.ReadFrom.Configuration(ctx.Configuration);
-                    config.WriteTo.Console(new ElasticsearchJsonFormatter());
-                }
-                ); // <-- Add this line;;
+            .UseStartup<Startup>();
+        //.UseStartup<Startup>().UseSerilog(
+        //(ctx, config) =>
+        //{
+        //    config.ReadFrom.Configuration(ctx.Configuration);
+        //    config.WriteTo.Console(new ElasticsearchJsonFormatter());
+        //}
+        //); // <-- Add this line;;
     }
 }
