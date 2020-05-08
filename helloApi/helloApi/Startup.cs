@@ -20,9 +20,12 @@ namespace helloApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger _logger;
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -66,7 +69,7 @@ namespace helloApi
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
-         
+
             app.UseMvc();
         }
 
@@ -78,11 +81,12 @@ namespace helloApi
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
                 .Select(p => new Uri(p));
+            _logger.LogDebug($"addresses.Count{addresses.Count()}");
 
             foreach (var address in addresses)
             {
                 var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
-
+                _logger.LogDebug($"serviceId {serviceId }");
                 var httpCheck = new AgentServiceCheck()
                 {
                     DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
