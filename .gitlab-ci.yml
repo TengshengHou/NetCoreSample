@@ -32,6 +32,6 @@ helloapi-deploy-job:
     - docker images
     - docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
     - docker images
-    - docker run -d --name helloapi  -p 5001:80 helloapi
+    - docker run -d --name helloapi  -p 5021:5021 helloapi
   tags:
     - helloapi-deploy
