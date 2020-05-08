@@ -32,6 +32,6 @@ helloapi-deploy-job:
     - docker images
     - docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
     - docker images
-    - docker run -d --name helloapi --env ASPNETCORE_URLS=http://*47.100.193.29:5001 -p 5001:5001 helloapi
+    - docker run -d --name helloapi --env ASPNETCORE_URLS=http://47.100.193.29:5001 -p 5001:5001 helloapi
   tags:
     - helloapi-deploy
