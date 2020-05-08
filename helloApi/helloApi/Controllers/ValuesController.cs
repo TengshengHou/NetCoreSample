@@ -15,7 +15,7 @@ namespace helloApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult Get(IDnsQuery dnsquery, IOptions<ServiceDisvoveryOptions> serviceDisvoveryOptions)
+        public ActionResult Get([FromServicesAttribute] IDnsQuery dnsquery, [FromServicesAttribute] IOptions<ServiceDisvoveryOptions> serviceDisvoveryOptions)
         {
             var address = dnsquery.ResolveService("service.consul", serviceDisvoveryOptions.Value.ServiceName);
             var addressList = address.First().AddressList;

@@ -1,0 +1,1 @@
+consul agent --client -join='47.100.193.29' -client='0.0.0.0'
