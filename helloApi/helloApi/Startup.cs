@@ -106,7 +106,7 @@ namespace helloApi
 
 
             var serviceId = $"{serviceOptions.Value.ContactServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
-            var healthCheckUrl = $"{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/HealthCheck";
+            var healthCheckUrl = $"{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/api/HealthCheck";
             var httpCheck = new AgentServiceCheck()
             {
                 DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
