@@ -76,34 +76,52 @@ namespace helloApi
 
         private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
-            #region 注册进Consul
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>()
-                .Addresses
-                .Select(p => new Uri(p));
-            _logger.LogDebug($"addresses.Count{addresses.Count()}");
+            //#region 注册进Consul
+            //var features = app.Properties["server.Features"] as FeatureCollection;
+            //var addresses = features.Get<IServerAddressesFeature>()
+            //    .Addresses
+            //    .Select(p => new Uri(p));
+            //_logger.LogDebug($"addresses.Count{addresses.Count()}");
 
-            foreach (var address in addresses)
+            //foreach (var address in addresses)
+            //{
+            //    var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
+            //    _logger.LogDebug($"serviceId {serviceId }");
+            //    var httpCheck = new AgentServiceCheck()
+            //    {
+            //        DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+            //        Interval = TimeSpan.FromSeconds(30),
+            //        HTTP = new Uri(address, "HealthCheck").OriginalString
+            //    };
+            //    var registration = new AgentServiceRegistration()
+            //    {
+            //        Checks = new[] { httpCheck },
+            //        Address = address.Host,
+            //        ID = serviceId,
+            //        Name = serviceOptions.Value.ContactServiceName,
+            //        Port = address.Port
+            //    };
+            //    consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+            //}
+
+
+            var serviceId = $"{serviceOptions.Value.ContactServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
+            var healthCheckUrl = $"{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/HealthCheck";
+            var httpCheck = new AgentServiceCheck()
             {
-                var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
-                _logger.LogDebug($"serviceId {serviceId }");
-                var httpCheck = new AgentServiceCheck()
-                {
-                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
-                    Interval = TimeSpan.FromSeconds(30),
-                    HTTP = new Uri(address, "HealthCheck").OriginalString
-                };
-                var registration = new AgentServiceRegistration()
-                {
-                    Checks = new[] { httpCheck },
-                    Address = address.Host,
-                    ID = serviceId,
-                    Name = serviceOptions.Value.ContactServiceName,
-                    Port = address.Port
-                };
-                consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-            }
-            #endregion
+                DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                Interval = TimeSpan.FromSeconds(30),
+                HTTP = healthCheckUrl
+            };
+            var registration = new AgentServiceRegistration()
+            {
+                Checks = new[] { httpCheck },
+                Address = serviceOptions.Value.ServiceIP,
+                ID = serviceId,
+                Name = serviceOptions.Value.ContactServiceName,
+                Port = serviceOptions.Value.ServicePort
+            };
+            consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
         }
 
 

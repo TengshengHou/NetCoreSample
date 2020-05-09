@@ -48,7 +48,7 @@ namespace helloApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>();
+            .UseStartup<Startup>().UseUrls("http://www.baidu.com:5021");
         //.UseStartup<Startup>().UseSerilog(
         //(ctx, config) =>
         //{

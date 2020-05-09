@@ -10,6 +10,8 @@ namespace Recommend.API.Data
     {
         public string ServiceName { get; set; }
         public string ContactServiceName { get; set; }
+        public string ServiceIP { get; set; }
+        public int ServicePort { get; set; }
 
         public ConsulOptions Consul { get; set; }
     }
