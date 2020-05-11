@@ -60,15 +60,15 @@ namespace helloApi
             }
 
             //启动
-            applicationLifetime.ApplicationStarted.Register(() =>
-            {
-                RegisterService(app, serviceOptions, consul);
-            });
-            //停止
-            applicationLifetime.ApplicationStopped.Register(() =>
-            {
-                DeRegisterService(app, serviceOptions, consul);
-            });
+            //applicationLifetime.ApplicationStarted.Register(() =>
+            //{
+            //    RegisterService(app, serviceOptions, consul);
+            //});
+            ////停止
+            //applicationLifetime.ApplicationStopped.Register(() =>
+            //{
+            //    DeRegisterService(app, serviceOptions, consul);
+            //});
 
             app.UseMvc();
         }
@@ -131,15 +131,17 @@ namespace helloApi
         {
 
             #region 卸载Consul注册
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>()
-                .Addresses
-                .Select(p => new Uri(p));
-            foreach (var address in addresses)
-            {
-                var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
-                consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-            }
+            //var features = app.Properties["server.Features"] as FeatureCollection;
+            //var addresses = features.Get<IServerAddressesFeature>()
+            //    .Addresses
+            //    .Select(p => new Uri(p));
+            //foreach (var address in addresses)
+            //{
+            //    var serviceId = $"{serviceOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
+            //    consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+            //}
+            var serviceId = $"{serviceOptions.Value.ContactServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
+            consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
             #endregion
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using DnsClient;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace helloApi.Controllers
             var host = addressList.Any() ? addressList.First().ToString() : addressList.First().Address.ToString();
             var port = address.First().Port;
             return Ok($"http://{host}:{port}");
+
         }
 
         // GET api/values/5
