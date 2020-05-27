@@ -60,3 +60,8 @@ CoreService/helloApi/.vs/
 CoreService/helloApi/helloApi/obj/
 CoreService/helloApi/helloApi/bin/
 CoreService/API/consul/tmp/
+RabbitMQ/RabbitMQ_Consumer_Console/bin/
+RabbitMQ/RabbitMQ_Consumer_Console/obj/
+RabbitMQ/RabbitMQPublish/bin/
+RabbitMQ/RabbitMQPublish/obj/
+RabbitMQ/.vs/
