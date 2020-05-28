@@ -8,7 +8,7 @@ namespace API.Gateway.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class Values1Controller : ControllerBase
     {
         // GET api/values
         [HttpGet]
