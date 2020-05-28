@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /app
-COPY out/ /app
+COPY out/gateway /app
 ENTRYPOINT [ "dotnet", "/app/helloApi.dll"]
