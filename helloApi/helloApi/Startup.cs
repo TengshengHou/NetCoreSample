@@ -59,7 +59,7 @@ namespace helloApi
                 app.UseDeveloperExceptionPage();
             }
 
-            启动
+            //启动
             applicationLifetime.ApplicationStarted.Register(() =>
             {
                 RegisterService(app, serviceOptions, consul);
