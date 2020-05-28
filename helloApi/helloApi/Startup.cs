@@ -59,16 +59,16 @@ namespace helloApi
                 app.UseDeveloperExceptionPage();
             }
 
-            //启动
-            //applicationLifetime.ApplicationStarted.Register(() =>
-            //{
-            //    RegisterService(app, serviceOptions, consul);
-            //});
-            ////停止
-            //applicationLifetime.ApplicationStopped.Register(() =>
-            //{
-            //    DeRegisterService(app, serviceOptions, consul);
-            //});
+            启动
+            applicationLifetime.ApplicationStarted.Register(() =>
+            {
+                RegisterService(app, serviceOptions, consul);
+            });
+            //停止
+            applicationLifetime.ApplicationStopped.Register(() =>
+            {
+                DeRegisterService(app, serviceOptions, consul);
+            });
 
             app.UseMvc();
         }
