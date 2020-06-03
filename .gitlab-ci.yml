@@ -13,11 +13,18 @@ helloapi-build-job:
     - cd helloApi
     - dotnet restore
     - dotnet publish -o ../out -c Release
+    - cd ../
+    # 构建网关
+    - cd CoreService/User.Api/API.Gateway
+    - dotnet restore
+    - dotnet publish -o ../../../out/gateway -c Release
+    - cd ../../../
   artifacts:
     # 可以缓存在gitlab的流水线记录中，供直接下载
     expire_in: 30 days
     paths:
       - out/
+      - out/gateway
   tags:
     - helloapi-build
 # 发布正式
@@ -29,50 +36,11 @@ helloapi-deploy-job:
     - helloapi-build-job  # 这里一定要依赖build-job，不然dockerfile里面的out目录无法使用
   script:
     - sh ./helloApi/helloApi/check-images.sh
-    - docker images
     - docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
-    - docker images
     - docker run -d --name helloapi  -p 5021:80 helloapi
-  tags:
-    - helloapi-deploy
-####################################################################    
-# 构建网关
-gateway-build-job:
-  stage: build
-  image: mcr.microsoft.com/dotnet/core/sdk:3.1
-  only:
-    - master
-  cache:
-    untracked: true
-  script:
-    - ls
-    - pwd
-    - cd CoreService/User.Api/API.Gateway
-    - dotnet restore
-    - dotnet publish -o ../../../out/gateway -c Release
-  artifacts:
-    # 可以缓存在gitlab的流水线记录中，供直接下载
-    expire_in: 30 days
-    paths:
-      - out/gateway
-  tags:
-    - gateway-build
-# 发布正式
-gateway-deploy-job:
-  stage: deploy
-  only:
-    - master
-  dependencies:
-    - gateway-build-job  # 这里一定要依赖build-job，不然dockerfile里面的out目录无法使用
-  script:
+      # 网关
     - sh ./CoreService/User.Api/API.Gateway/check-images.sh
-    - docker images
     - docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
-    - docker images
     - docker run -d --name gateway  -p 81:81 gateway
   tags:
-    - gateway-deploy
-    
-    
-    
-    
+    - helloapi-deploy
