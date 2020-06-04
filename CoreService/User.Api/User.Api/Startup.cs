@@ -81,7 +81,7 @@ namespace User.Api
                     d.DiscoveryServerHostName = "47.100.193.29";
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "47.100.193.29";
-                    d.CurrentNodePort = 5000;
+                    d.CurrentNodePort = 82;
                     d.NodeId = 2;
                     d.NodeName = "CAP User API";
                 });
@@ -90,7 +90,7 @@ namespace User.Api
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul, ILoggerFactory loggerFactory)
+            IApplicationLifetime applicationLifetime, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul, ILoggerFactory loggerFactory, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -100,7 +100,7 @@ namespace User.Api
             //启动
             applicationLifetime.ApplicationStarted.Register(() =>
             {
-                RegisterService(app, serviceOptions, consul);
+                RegisterService(app, serviceOptions, consul, logger);
             });
             //停止
             applicationLifetime.ApplicationStopped.Register(() =>
@@ -117,12 +117,12 @@ namespace User.Api
         }
 
 
-        private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
+        private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul, ILogger<Startup> logger)
         {
             #region 注册进Consul
             var serviceId = $"{serviceOptions.Value.ServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
             var healthCheckUrl = $"http://{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/api/HealthCheck";
-
+            logger.LogDebug($"注册进Consul serviceId:{serviceId} ,healthCheckUrl：{healthCheckUrl}");
             var httpCheck = new AgentServiceCheck()
             {
                 DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
