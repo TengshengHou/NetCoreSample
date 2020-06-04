@@ -137,7 +137,8 @@ namespace User.Api
                 Name = serviceOptions.Value.ServiceName,
                 Port = serviceOptions.Value.ServicePort
             };
-            consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+            var serviceRegisterResutl = consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+            logger.LogDebug($"注册结果serviceRegisterResutl  :{serviceRegisterResutl .StatusCode}");
             #endregion
         }
 

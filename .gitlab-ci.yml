@@ -10,15 +10,15 @@ helloapi-build-job:
   cache:
     untracked: true
   script:
-    - cd helloApi
-    - dotnet restore
-    - dotnet publish -o ../out -c Release
-    - cd ../
+    #- cd helloApi
+    #- dotnet restore
+    #- dotnet publish -o ../out -c Release
+    #- cd ../
     # 构建网关
-    - cd CoreService/User.Api/API.Gateway
-    - dotnet restore
-    - dotnet publish -o ../../../out/gateway -c Release
-    - cd ../../../
+    #- cd CoreService/User.Api/API.Gateway
+    #- dotnet restore
+    #- dotnet publish -o ../../../out/gateway -c Release
+    #- cd ../../../
     # UserApi
     - cd CoreService/User.Api/User.Api
     - dotnet restore
@@ -44,13 +44,13 @@ helloapi-deploy-job:
   dependencies:
     - helloapi-build-job  # 这里一定要依赖build-job，不然dockerfile里面的out目录无法使用
   script:
-    - sh ./helloApi/helloApi/check-images.sh
-    - docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
-    - docker run -d --name helloapi  -p 5021:80 helloapi
+    #- sh ./helloApi/helloApi/check-images.sh
+    #- docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
+    #- docker run -d --name helloapi  -p 5021:80 helloapi
       # 网关
-    - sh ./CoreService/User.Api/API.Gateway/check-images.sh
-    - docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
-    - docker run -d --name gateway  -p 81:81 gateway
+    #- sh ./CoreService/User.Api/API.Gateway/check-images.sh
+    #- docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
+    #- docker run -d --name gateway  -p 81:81 gateway
       #userApi
     - sh ./CoreService/User.Api/User.Api/check-images.sh
     - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
