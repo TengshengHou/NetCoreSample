@@ -121,7 +121,7 @@ namespace User.Api
         {
             #region 注册进Consul
             var serviceId = $"{serviceOptions.Value.ServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
-            var healthCheckUrl = $"http://{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/api/HealthCheck";
+            var healthCheckUrl = $"http://{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/HealthCheck";
             logger.LogDebug($"注册进Consul serviceId:{serviceId} ,healthCheckUrl：{healthCheckUrl}");
             var httpCheck = new AgentServiceCheck()
             {
