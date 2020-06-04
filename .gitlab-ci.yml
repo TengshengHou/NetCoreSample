@@ -53,7 +53,7 @@ helloapi-deploy-job:
     - docker run -d --name gateway  -p 81:81 gateway
       #userApi
     - sh ./CoreService/User.Api/User.Api/check-images.sh
-    - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t gateway .
+    - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
     - docker run -d --name userapi  -p 5000:5000 userapi
   tags:
     - helloapi-deploy
