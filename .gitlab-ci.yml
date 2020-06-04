@@ -19,12 +19,21 @@ helloapi-build-job:
     - dotnet restore
     - dotnet publish -o ../../../out/gateway -c Release
     - cd ../../../
+    # UserApi
+    - cd CoreService/User.Api/User.Api
+    - dotnet restore
+    - dotnet publish -o ../../../out/userapi -c Release
+    - cd ../../../
+    
+    
+    
   artifacts:
     # 可以缓存在gitlab的流水线记录中，供直接下载
     expire_in: 30 days
     paths:
       - out/
       - out/gateway
+      - out/userapi
   tags:
     - helloapi-build
 # 发布正式
@@ -42,5 +51,9 @@ helloapi-deploy-job:
     - sh ./CoreService/User.Api/API.Gateway/check-images.sh
     - docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
     - docker run -d --name gateway  -p 81:81 gateway
+      #userApi
+    - sh ./CoreService/User.Api/User.Api/check-images.sh
+    - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t gateway .
+    - docker run -d --name userapi  -p 5000:5000 userapi
   tags:
     - helloapi-deploy

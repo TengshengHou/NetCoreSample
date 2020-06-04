@@ -1,15 +1,21 @@
-﻿using Consul;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
+using Consul;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using User.Api.Data;
 using User.Api.Filters;
 using zipkin4net;
@@ -19,9 +25,9 @@ using zipkin4net.Transport.Http;
 
 namespace User.Api
 {
-    public class Startup
+    public class StartupDev
     {
-        public Startup(IConfiguration configuration)
+        public StartupDev(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -32,7 +38,9 @@ namespace User.Api
         {
             services.AddDbContext<UserContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("PGConnection"));
+                //options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                 options.UseNpgsql(Configuration.GetConnectionString("PGConnection"));
+                //options.UseSqlServer(Configuration.GetConnectionString("sqlservice"), sqlOptions => sqlOptions.UseRowNumberForPaging());
             });
 
             //认证注册
@@ -41,7 +49,7 @@ namespace User.Api
             {
                 Options.RequireHttpsMetadata = false;
                 Options.Audience = "user_api";
-                Options.Authority = "http://47.100.193.29:81";//网关地址
+                Options.Authority = "http://localhost:81";//网关地址
             });
 
             //注册配置文件
@@ -68,19 +76,13 @@ namespace User.Api
             //CAP
             services.AddCap(options =>
             {
-                options.UseEntityFramework<UserContext>().UseRabbitMQ(rabbitMQOptions =>
-                {
-                    rabbitMQOptions.UserName = "guest";
-                    rabbitMQOptions.Password = "guest123";
-                    rabbitMQOptions.Port = 5672;
-                    rabbitMQOptions.HostName = "47.100.193.29";
-                }).UseDashboard();
+                options.UseEntityFramework<UserContext>().UseRabbitMQ("192.168.2.2").UseDashboard();
                 // Register to Consul
                 options.UseDiscovery(d =>
                 {
-                    d.DiscoveryServerHostName = "47.100.193.29";
+                    d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;
-                    d.CurrentNodeHostName = "47.100.193.29";
+                    d.CurrentNodeHostName = "localhost";
                     d.CurrentNodePort = 5000;
                     d.NodeId = 2;
                     d.NodeName = "CAP User API";
@@ -120,24 +122,31 @@ namespace User.Api
         private void RegisterService(IApplicationBuilder app, IOptions<ServiceDisvoveryOptions> serviceOptions, IConsulClient consul)
         {
             #region 注册进Consul
-            var serviceId = $"{serviceOptions.Value.ServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
-            var healthCheckUrl = $"http://{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}/api/HealthCheck";
+            var features = app.Properties["server.Features"] as FeatureCollection;
+            var addresses = features.Get<IServerAddressesFeature>()
+                .Addresses
+                .Select(p => new Uri(p));
 
-            var httpCheck = new AgentServiceCheck()
+            foreach (var address in addresses)
             {
-                DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
-                Interval = TimeSpan.FromSeconds(30),
-                HTTP = healthCheckUrl
-            };
-            var registration = new AgentServiceRegistration()
-            {
-                Checks = new[] { httpCheck },
-                Address = serviceOptions.Value.ServiceIP,
-                ID = serviceId,
-                Name = serviceOptions.Value.ServiceName,
-                Port = serviceOptions.Value.ServicePort
-            };
-            consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+                var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
+
+                var httpCheck = new AgentServiceCheck()
+                {
+                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                    Interval = TimeSpan.FromSeconds(30),
+                    HTTP = new Uri(address, "HealthCheck").OriginalString
+                };
+                var registration = new AgentServiceRegistration()
+                {
+                    Checks = new[] { httpCheck },
+                    Address = address.Host,
+                    ID = serviceId,
+                    Name = serviceOptions.Value.ServiceName,
+                    Port = address.Port
+                };
+                consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+            }
             #endregion
         }
 
@@ -145,8 +154,15 @@ namespace User.Api
         {
 
             #region 卸载Consul注册
-            var serviceId = $"{serviceOptions.Value.ServiceName}_{serviceOptions.Value.ServiceIP}:{serviceOptions.Value.ServicePort}";
-            consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+            var features = app.Properties["server.Features"] as FeatureCollection;
+            var addresses = features.Get<IServerAddressesFeature>()
+                .Addresses
+                .Select(p => new Uri(p));
+            foreach (var address in addresses)
+            {
+                var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
+                consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+            }
             #endregion
         }
 
@@ -156,11 +172,12 @@ namespace User.Api
             {
                 TraceManager.SamplingRate = 1.0f;
                 var logger = new TracingLogger(loggerFactory, "zipkin4net");
-                var httpSender = new HttpZipkinSender("http://47.100.193.29:9411", "application/json");
+                var httpSender = new HttpZipkinSender("http://192.168.2.2:9411", "application/json");
                 var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
 
                 var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();
                 TraceManager.RegisterTracer(consoleTracer);
+
                 TraceManager.RegisterTracer(tracer);
                 TraceManager.Start(logger);
             });
