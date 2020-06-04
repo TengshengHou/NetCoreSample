@@ -54,6 +54,6 @@ helloapi-deploy-job:
       #userApi
     - sh ./CoreService/User.Api/User.Api/check-images.sh
     - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
-    - docker run -d --name userapi  -p 5000:5000 userapi
+    - docker run -d --name userapi  -p 82:80 userapi
   tags:
     - helloapi-deploy
