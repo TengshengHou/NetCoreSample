@@ -20,11 +20,14 @@ helloapi-build-job:
     #- dotnet publish -o ../../../out/gateway -c Release
     #- cd ../../../
     # UserApi
-    - cd CoreService/User.Api/User.Api
+    #- cd CoreService/User.Api/User.Api
+    #- dotnet restore
+    #- dotnet publish -o ../../../out/userapi -c Release
+    #- cd ../../../
+    - cd CoreService/User.Api/User.Identity
     - dotnet restore
-    - dotnet publish -o ../../../out/userapi -c Release
+    - dotnet publish -o ../../../out/useridentity -c Release
     - cd ../../../
-    
     
     
   artifacts:
@@ -34,6 +37,7 @@ helloapi-build-job:
       - out/
       - out/gateway
       - out/userapi
+      - out/useridentity
   tags:
     - helloapi-build
 # 发布正式
@@ -52,8 +56,11 @@ helloapi-deploy-job:
     #- docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
     #- docker run -d --name gateway  -p 81:81 gateway
       #userApi
-    - sh ./CoreService/User.Api/User.Api/check-images.sh
-    - docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
-    - docker run -d --name userapi  -p 82:80 userapi
+    #- sh ./CoreService/User.Api/User.Api/check-images.sh
+    #- docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
+    #- docker run -d --name userapi  -p 82:80 userapi
+    - sh ./CoreService/User.Api/User.Identity/check-images.sh
+    - docker build -f ./CoreService/User.Api/User.Identity/Dockerfile -t useridentity .
+    - docker run -d --name useridentity  -p 83:80 useridentity
   tags:
     - helloapi-deploy
