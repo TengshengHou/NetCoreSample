@@ -41,7 +41,7 @@ namespace User.Api
             {
                 Options.RequireHttpsMetadata = false;
                 Options.Audience = "user_api";
-                Options.Authority = "http://47.100.193.29:81";//网关地址
+                Options.Authority = "http://47.100.193.29:82";//网关地址
             });
 
             //注册配置文件

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Contact.API.Controllers
+namespace Recommend.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +14,7 @@ namespace Contact.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "Contact.API", "value1", "value2" };
+            return new string[] { "Recommend.API", "value1", "value2" };
         }
 
         // GET api/values/5

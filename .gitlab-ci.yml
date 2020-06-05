@@ -15,19 +15,20 @@ helloapi-build-job:
     #- dotnet publish -o ../out -c Release
     #- cd ../
     # 构建网关
-    #- cd CoreService/User.Api/API.Gateway
-    #- dotnet restore
-    #- dotnet publish -o ../../../out/gateway -c Release
-    #- cd ../../../
+    - cd CoreService/User.Api/API.Gateway
+    - dotnet restore
+    - dotnet publish -o ../../../out/gateway -c Release
+    - cd ../../../
     # UserApi
     #- cd CoreService/User.Api/User.Api
     #- dotnet restore
     #- dotnet publish -o ../../../out/userapi -c Release
     #- cd ../../../
-    - cd CoreService/User.Api/User.Identity
-    - dotnet restore
-    - dotnet publish -o ../../../out/useridentity -c Release
-    - cd ../../../
+    #Identity
+    #- cd CoreService/User.Api/User.Identity
+    #- dotnet restore
+    #- dotnet publish -o ../../../out/useridentity -c Release
+    #- cd ../../../
     
     
   artifacts:
@@ -52,15 +53,16 @@ helloapi-deploy-job:
     #- docker build -f ./helloApi/helloApi/Dockerfile -t helloapi .
     #- docker run -d --name helloapi  -p 5021:80 helloapi
       # 网关
-    #- sh ./CoreService/User.Api/API.Gateway/check-images.sh
-    #- docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
-    #- docker run -d --name gateway  -p 81:81 gateway
-      #userApi
+    - sh ./CoreService/User.Api/API.Gateway/check-images.sh
+    - docker build -f ./CoreService/User.Api/API.Gateway/Dockerfile -t gateway .
+    - docker run -d --name gateway  -p 81:81 gateway
+    #userApi
     #- sh ./CoreService/User.Api/User.Api/check-images.sh
     #- docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
     #- docker run -d --name userapi  -p 82:80 userapi
-    - sh ./CoreService/User.Api/User.Identity/check-images.sh
-    - docker build -f ./CoreService/User.Api/User.Identity/Dockerfile -t useridentity .
-    - docker run -d --name useridentity  -p 83:80 useridentity
+    #Identity
+    #- sh ./CoreService/User.Api/User.Identity/check-images.sh
+    #- docker build -f ./CoreService/User.Api/User.Identity/Dockerfile -t useridentity .
+    #- docker run -d --name useridentity  -p 83:80 useridentity
   tags:
     - helloapi-deploy
