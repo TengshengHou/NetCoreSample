@@ -25,9 +25,9 @@ using zipkin4net.Transport.Http;
 
 namespace User.Api
 {
-    public class StartupDev
+    public class StartupDevelopment
     {
-        public StartupDev(IConfiguration configuration)
+        public StartupDevelopment(IConfiguration configuration)
         {
             Configuration = configuration;
         }

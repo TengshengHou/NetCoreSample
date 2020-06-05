@@ -79,7 +79,7 @@ namespace User.Api
                 options.UseDiscovery(d =>
                 {
                     d.DiscoveryServerHostName = "47.100.193.29";
-                    d.DiscoveryServerPort = 8500;
+                    d.DiscoveryServerPort = 8501;
                     d.CurrentNodeHostName = "47.100.193.29";
                     d.CurrentNodePort = 82;
                     d.NodeId = 2;

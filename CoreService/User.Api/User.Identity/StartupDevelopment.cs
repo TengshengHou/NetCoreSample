@@ -25,9 +25,9 @@ using zipkin4net.Transport.Http;
 
 namespace User.Identity
 {
-    public class Startup
+    public class StartupDevelopment
     {
-        public Startup(IConfiguration configuration)
+        public StartupDevelopment(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -89,7 +89,7 @@ namespace User.Identity
             {
                 TraceManager.SamplingRate = 1.0f;
                 var logger = new TracingLogger(loggerFactory, "zipkin4net");
-                var httpSender = new HttpZipkinSender("http://47.100.193.29:9411", "application/json");
+                var httpSender = new HttpZipkinSender("http://192.168.2.2:9411", "application/json");
                 var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
 
                 var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();

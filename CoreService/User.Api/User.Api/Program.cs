@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Core.SimpleTemp.Mvc;
 using Microsoft.AspNetCore;
@@ -20,8 +21,13 @@ namespace User.Api
             webHost.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            //User.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null 得到Startup程序集名字从而找到对应环境的 Startup Class
+            var assemblyName = typeof(Startup).GetTypeInfo().Assembly.FullName;
+            return WebHost.CreateDefaultBuilder(args)
+                  //.UseStartup<Startup>();
+                  .UseStartup(assemblyName);
+        }
     }
 }
