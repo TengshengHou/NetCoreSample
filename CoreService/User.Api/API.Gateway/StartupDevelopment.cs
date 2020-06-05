@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,13 @@ namespace Gateway.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.Map("/api/values", applicationBuilder =>
+            {
+                applicationBuilder.Run(async context =>
+                {
+                    await context.Response.WriteAsync("Gateway.API");
+                });
+            });
             RegisterZipkinTrace(app, loggerFactory, lifetime);
             app.UseOcelot();
         }

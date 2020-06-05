@@ -80,6 +80,13 @@ namespace User.Identity
             }
             RegisterZipkinTrace(app, loggerFactory, applicationLifetime);
             app.UseIdentityServer();
+            app.Map("/api/values", applicationBuilder =>
+            {
+                applicationBuilder.Run(async context =>
+                {
+                    await context.Response.WriteAsync("User.Identity");
+                });
+            });
             app.UseMvc();
         }
 

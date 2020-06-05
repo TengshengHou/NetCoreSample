@@ -25,10 +25,10 @@ helloapi-build-job:
     #- dotnet publish -o ../../../out/userapi -c Release
     #- cd ../../../
     #Identity
-    #- cd CoreService/User.Api/User.Identity
-    #- dotnet restore
-    #- dotnet publish -o ../../../out/useridentity -c Release
-    #- cd ../../../
+    - cd CoreService/User.Api/User.Identity
+    - dotnet restore
+    - dotnet publish -o ../../../out/useridentity -c Release
+    - cd ../../../
     
     
   artifacts:
@@ -61,8 +61,8 @@ helloapi-deploy-job:
     #- docker build -f ./CoreService/User.Api/User.Api/Dockerfile -t userapi .
     #- docker run -d --name userapi  -p 82:80 userapi
     #Identity
-    #- sh ./CoreService/User.Api/User.Identity/check-images.sh
-    #- docker build -f ./CoreService/User.Api/User.Identity/Dockerfile -t useridentity .
-    #- docker run -d --name useridentity  -p 83:80 useridentity
+    - sh ./CoreService/User.Api/User.Identity/check-images.sh
+    - docker build -f ./CoreService/User.Api/User.Identity/Dockerfile -t useridentity .
+    - docker run -d --name useridentity  -p 83:80 useridentity
   tags:
     - helloapi-deploy
